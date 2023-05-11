@@ -2,12 +2,18 @@
 
 import React from 'react';
 import { Spacer } from "@nextui-org/react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPaperPlane, faInbox} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane, faInbox } from "@fortawesome/free-solid-svg-icons";
 
-export default function Sidebar() {
+interface SidebarProps {
+    visible: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ visible }) => {
+    if (!visible) return null;
+
     return (
-        <div className="fixed top-0 left-0 w- h-full overflow-auto bg-gray-950 p-5">
+        <div className={`fixed top-0 left-0 w- h-full overflow-auto bg-gray-950 p-5`}>
             <div className="logo">
                 {/* Hier können Sie Ihr Logo einfügen */}
             </div>
@@ -21,9 +27,9 @@ export default function Sidebar() {
                     <FontAwesomeIcon icon={faPaperPlane} />
                     <span style={{ marginLeft: '15px' }}>Send</span>
                 </button>
-
             </div>
         </div>
     );
-}
+};
 
+export default Sidebar;
