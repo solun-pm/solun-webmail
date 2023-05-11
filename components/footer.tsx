@@ -2,8 +2,8 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-950 py-8 z-10 relative">
-      <div className="container mx-auto px-4">
+    <footer className="inline-block relative bg-gray-950 py-8">
+      <div className=" left-0 right-0 container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-start">
           <div className="text-white mb-8 md:mb-0">
             <h2 className="text-3xl font-bold">Solun</h2>

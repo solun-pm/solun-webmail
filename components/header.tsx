@@ -19,13 +19,13 @@ const Header: React.FC = () => {
 
     return (
         <>
-            <header className="fixed top-0 overflow-auto w-full flex p-5 bg-gray-950 text-white z-10 relative sticky justify-center">
+            <header className="top-0 overflow-auto w-full flex p-5 bg-gray-950 text-white z-10 sticky justify-center">
                 <button className="mr-4 p-2 rounded-md hover:bg-gray-700 transition-200 transition duration-200" onClick={toggleSidebar}>
                     <FontAwesomeIcon icon={faBars} />
                 </button>
                 <div className="flex items-center">
                     <img src="/path/to/your/logo.png" alt="logo" className="h-10 w-10" />
-                    <h1 className="ml-2 text-2xl">Solun Webmail</h1>
+                    <h1 className="ml-2 text-2xl">Solun</h1>
                 </div>
                 <div className="flex-grow mx-10 flex">
                     <div className="flex-grow mx-10 flex items-center justify-start bg-gray-950">
