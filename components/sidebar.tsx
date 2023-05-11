@@ -7,7 +7,7 @@ import {faPaperPlane, faInbox} from "@fortawesome/free-solid-svg-icons";
 
 export default function Sidebar() {
     return (
-        <div className="fixed top-0 left-0 w-1/6 h-full overflow-auto bg-gray-950 p-5">
+        <div className="fixed top-0 left-0 w- h-full overflow-auto bg-gray-950 p-5">
             <div className="logo">
                 {/* Hier können Sie Ihr Logo einfügen */}
             </div>
