@@ -5,7 +5,7 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false
 
-import Header from '@/components/header'
+import HeaderOrig from '@/components/header.orig'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,7 +22,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
         {children}
       </body>
     </html>

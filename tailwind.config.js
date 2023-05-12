@@ -4,7 +4,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: "class", // Hinzufügen dieser Zeile
+  darkMode: "class",
   theme: {
     extend: {},
   },
