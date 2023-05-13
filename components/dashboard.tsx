@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCog, faInbox, faPaperPlane, faSearch, faSliders } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCog, faInbox, faPaperPlane, faSearch, faSliders, faPen } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
     const [sidebarVisible, setSidebarVisible] = useState(false);
@@ -20,7 +20,7 @@ export default function Home() {
                             <button onClick={toggleSidebar} className="text-white">
                                 <FontAwesomeIcon icon={faBars} />
                             </button>
-                            <img src="/logo.png" alt="Logo" className="hidden md:block h-8 w-8" />
+                            <img src="/logo.svg" alt="Logo" className="hidden md:block h-8 w-8" />
                             <h1 className="hidden md:block text-white text-xl font-semibold">Solun</h1>
                         </div>
                         <div className="flex-grow mx-10 flex items-center justify-start bg-gray-950">
@@ -47,12 +47,16 @@ export default function Home() {
             </div>
         <div className="flex flex-grow">
             <aside className={`w-full md:w-1/6 bg-gray-950 p-4 h-screen ${sidebarVisible ? 'block' : 'hidden'}`}>
-            <div className="overflow-y-auto h-full">
-                    <button className="w-full text-white p-2 rounded-md bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
+                <div className="overflow-y-auto h-full">
+                    <button className="w-2/3 text-white p-2 rounded-lg bg-blue-500 transition-200 duration-200 text-left" style={{ height: '3.5rem', paddingLeft: '15px', margin: '0.5rem 0', marginLeft: '1rem' }}>
+                        <FontAwesomeIcon icon={faPen} />
+                        <span style={{ marginLeft: '15px' }}>Write</span>
+                    </button>
+                    <button className="w-full text-white p-2 rounded-r-full bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
                         <FontAwesomeIcon icon={faInbox} />
                         <span style={{ marginLeft: '15px' }}>Inbox</span>
                     </button>
-                    <button className="w-full text-white p-2 rounded-md bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
+                    <button className="w-full text-white p-2 rounded-r-full bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
                         <FontAwesomeIcon icon={faPaperPlane} />
                         <span style={{ marginLeft: '15px' }}>Send</span>
                     </button>
@@ -65,8 +69,7 @@ export default function Home() {
 
 
                 <div className="container mx-auto p-4 text-white">
-                    {/* Hier kommt der Hauptinhalt der Seite hin */}
-                    <h1>Main Content</h1>
+
                 </div>
             </div>
         </div>
