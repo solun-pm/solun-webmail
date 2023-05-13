@@ -2,13 +2,73 @@
 
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCog, faInbox, faPaperPlane, faSearch, faSliders, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCog, faInbox, faPaperPlane, faSearch, faSliders, faPen, faTimes, faArrowUp } from "@fortawesome/free-solid-svg-icons";
+
+function NewMailPopup({ onClose }) {
+    return (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-gray-950 p-8 rounded-lg w-10/12 md:w-1/2 flex flex-col">
+                <div className="flex justify-between items-start">
+                    <div className="flex flex-col">
+                        <button
+                            className="w-8 h-8 bg-gray-800 text-white font-semibold rounded-full hover:bg-gray-950 flex items-center justify-center mb-2"
+                            onClick={onClose}
+                        >
+                            <FontAwesomeIcon icon={faTimes} size="lg" />
+                        </button>
+                        <h2 className="text-2xl font-semibold text-white">
+                            New Mail
+                        </h2>
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-12 h-12 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-700 flex items-center justify-center"
+                    >
+                        <FontAwesomeIcon icon={faArrowUp} size="2x" />
+                    </button>
+                </div>
+                <form className="mt-4 flex-grow">
+                    <div className="border-t border-blue-500 bg-gray-950">
+                        <input
+                            className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                            type="email"
+                            placeholder="To:"
+                        />
+                    </div>
+                    <div className="border-t border-blue-500">
+                        <input
+                            className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                            type="text"
+                            placeholder="Subject:"
+                        />
+                    </div>
+                    <div className="border-t border-blue-500">
+            <textarea
+                className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                placeholder="Message:"
+                rows={8}
+            />
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
 
 export default function Home() {
     const [sidebarVisible, setSidebarVisible] = useState(false);
+    const [newMailPopupVisible, setNewMailPopupVisible] = useState(false);
 
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
+    };
+
+    const openNewMailPopup = () => {
+        setNewMailPopupVisible(true);
+    };
+
+    const closeNewMailPopup = () => {
+        setNewMailPopupVisible(false);
     };
 
     return (
@@ -48,7 +108,11 @@ export default function Home() {
         <div className="flex flex-grow">
             <aside className={`w-full md:w-1/6 bg-gray-950 p-4 h-screen ${sidebarVisible ? 'block' : 'hidden'}`}>
                 <div className="overflow-y-auto h-full">
-                    <button className="w-2/3 text-white p-2 rounded-lg bg-blue-500 transition-200 duration-200 text-left" style={{ height: '3.5rem', paddingLeft: '15px', margin: '0.5rem 0', marginLeft: '1rem' }}>
+                    <button
+                        className="w-2/3 text-white p-2 rounded-lg bg-blue-500 transition-200 duration-200 text-left"
+                        style={{ height: '3.5rem', paddingLeft: '15px', margin: '0.5rem 0', marginLeft: '1rem' }}
+                        onClick={openNewMailPopup}
+                    >
                         <FontAwesomeIcon icon={faPen} />
                         <span style={{ marginLeft: '15px' }}>Write</span>
                     </button>
@@ -67,11 +131,11 @@ export default function Home() {
 
             </aside>
 
-
                 <div className="container mx-auto p-4 text-white">
-
+                    {/* Content */}
                 </div>
             </div>
+            {newMailPopupVisible && <NewMailPopup onClose={closeNewMailPopup} />}
         </div>
     );
 }
