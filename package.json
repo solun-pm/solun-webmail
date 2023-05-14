@@ -20,6 +20,8 @@
     "autoprefixer": "10.4.14",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
+    "imap": "^0.8.19",
+    "mailparser": "^3.6.4",
     "next": "13.4.1",
     "next-themes": "^0.2.1",
     "postcss": "8.4.23",
@@ -27,5 +29,9 @@
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/imap": "^0.8.36",
+    "@types/mailparser": "^3.4.0"
   }
 }
