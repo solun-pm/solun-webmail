@@ -1,10 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faCog, faInbox, faPaperPlane, faSearch, faSliders, faPen, faTimes, faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import {fetchMails} from "@/utils/mailService";
+import formatTime from "@/utils/formatTime";
 
-function NewMailPopup({ onClose }) {
+function NewMailPopup({ onClose }: any) {
     return (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-gray-950 p-8 rounded-lg w-10/12 md:w-1/2 flex flex-col">
@@ -71,6 +74,36 @@ export default function Home() {
         setNewMailPopupVisible(false);
     };
 
+    const [mails, setMails] = useState([]);
+    const [selectedMail, setSelectedMail] = useState(null);
+
+    useEffect(() => {
+        const loadMails = async () => {
+            try {
+                const res = await fetch('/api/mails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const data = await res.json();
+                if(!res.ok) {
+                    console.log(data);
+                } else {
+                    setMails(data.mails);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        };
+        loadMails();
+    }, []);
+
+    const handleMailItemClick = (mail : any) => {
+        setSelectedMail(mail);
+    };
+
+
     return (
         <div className="flex flex-col min-h-screen">
             <div className="w-full">
@@ -127,12 +160,39 @@ export default function Home() {
                 </div>
             </aside>
 
-            <aside className={`bg-blue-500 min-h-screen p-4 md:w-1/6`}>
+                <aside className={`bg-gray-900 min-h-screen p-4 md:w-1/6 text-white`}>
+                    <div className="overflow-y-auto h-full">
+                        {mails.map((mail, index) => (
+                            <MailItem
+                                key={index}
+                                //@ts-ignore Works fine (for now)
+                                subject={mail.subject}
+                                //@ts-ignore Works fine (for now)
+                                date={formatTime(mail.date)}
+                                onClick={() => handleMailItemClick(mail)}
+                            />
+                        ))}
+                    </div>
+                </aside>
 
-            </aside>
-
-                <div className="container mx-auto p-4 text-white">
-                    {/* Content */}
+            <div className="container mx-auto p-4 text-white">
+                {selectedMail && (
+                    <div>
+                        <h2 className="text-2xl font-semibold mb-4">
+                            {/*@ts-ignore Works fine (for now)*/}
+                            {selectedMail.subject}
+                        </h2>
+                        {/*@ts-ignore Works fine (for now)*/}
+                        <p>Date: {selectedMail.date.toLocaleString()}</p>
+                        <div
+                            className="mt-4"
+                            dangerouslySetInnerHTML={{
+                                // @ts-ignore Works fine (for now)
+                                __html: selectedMail.body,
+                            }}
+                        />
+                    </div>
+                )}
                 </div>
             </div>
             {newMailPopupVisible && <NewMailPopup onClose={closeNewMailPopup} />}
