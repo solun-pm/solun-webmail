@@ -3,11 +3,37 @@
 import React, { useState, useEffect } from 'react';
 import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCog, faInbox, faPaperPlane, faSearch, faSliders, faPen, faTimes, faArrowUp } from "@fortawesome/free-solid-svg-icons";
-import {fetchMails} from "@/utils/mailService";
 import formatTime from "@/utils/formatTime";
+import { faBars, faSearch, faTimes, faArrowUp, faSliders, faCog, faPen, faPaperPlane, faInbox } from "@fortawesome/free-solid-svg-icons";
 
-function NewMailPopup({ onClose }: any) {
+
+
+
+function NewMailPopup({ onClose }: { onClose: () => void }) {
+    const [to, setTo] = useState<string>('');
+    const [subject, setSubject] = useState<string>('');
+    const [message, setMessage] = useState<string>('');
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        try {
+            const response = await fetch('/api/smtp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ to, subject, message }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                console.log(data.message);
+            }
+            onClose();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-gray-950 p-8 rounded-lg w-10/12 lg:w-1/2 flex flex-col">
@@ -26,16 +52,19 @@ function NewMailPopup({ onClose }: any) {
                     <button
                         type="submit"
                         className="w-12 h-12 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-700 flex items-center justify-center"
+                        onClick={handleSubmit}
                     >
                         <FontAwesomeIcon icon={faArrowUp} size="2x" />
                     </button>
                 </div>
-                <form className="mt-4 flex-grow">
+                <form className="mt-4 flex-grow" onSubmit={handleSubmit}>
                     <div className="border-t border-blue-500 bg-gray-950">
                         <input
                             className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
                             type="email"
                             placeholder="To:"
+                            value={to}
+                            onChange={(e) => setTo(e.target.value)}
                         />
                     </div>
                     <div className="border-t border-blue-500">
@@ -43,6 +72,8 @@ function NewMailPopup({ onClose }: any) {
                             className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
                             type="text"
                             placeholder="Subject:"
+                            value={subject}
+                            onChange={(e) => setSubject(e.target.value)}
                         />
                     </div>
                     <div className="border-t border-blue-500">
@@ -50,6 +81,8 @@ function NewMailPopup({ onClose }: any) {
                 className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
                 placeholder="Message:"
                 rows={8}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
             />
                     </div>
                 </form>
@@ -80,7 +113,7 @@ export default function Home() {
     useEffect(() => {
         const loadMails = async () => {
             try {
-                const res = await fetch('/api/mails', {
+                const res = await fetch('/api/imap', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
