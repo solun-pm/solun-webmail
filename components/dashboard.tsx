@@ -10,7 +10,7 @@ import formatTime from "@/utils/formatTime";
 function NewMailPopup({ onClose }: any) {
     return (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-gray-950 p-8 rounded-lg w-10/12 md:w-1/2 flex flex-col">
+            <div className="bg-gray-950 p-8 rounded-lg w-10/12 lg:w-1/2 flex flex-col">
                 <div className="flex justify-between items-start">
                     <div className="flex flex-col">
                         <button
@@ -90,7 +90,9 @@ export default function Home() {
                 if(!res.ok) {
                     console.log(data);
                 } else {
-                    setMails(data.mails);
+                    //@ts-ignore works fine for now
+                    const sortedMails = data.mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    setMails(sortedMails);
                 }
             } catch (e) {
                 console.error(e);
@@ -112,11 +114,11 @@ export default function Home() {
                         <button onClick={toggleSidebar} className="text-white">
                             <FontAwesomeIcon icon={faBars} />
                         </button>
-                        <img src="/logo.svg" alt="Logo" className="hidden md:block h-8 w-8" />
-                        <h1 className="hidden md:block text-white text-xl font-semibold">Solun</h1>
+                        <img src="/logo.svg" alt="Logo" className="hidden lg:block h-8 w-8" />
+                        <h1 className="hidden lg:block text-white text-xl font-semibold">Solun</h1>
                     </div>
-                    <div className="w-full md:w-3/5 flex items-center justify-between bg-gray-950">
-                        <div className="w-full md:w-3/5 mx-4 bg-gray-950 text-white relative">
+                    <div className="w-full lg:w-3/5 flex items-center justify-between bg-gray-950">
+                        <div className="w-full lg:w-3/5 mx-4 bg-gray-950 text-white relative">
                             <FontAwesomeIcon icon={faSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             <input
                                 type="text"
@@ -136,65 +138,66 @@ export default function Home() {
                     </div>
                 </header>
 
-
             </div>
-        <div className="flex flex-grow">
-            <aside className={`w-full md:w-1/6 bg-gray-950 p-4 h-screen ${sidebarVisible ? 'block' : 'hidden'}`}>
-                <div className="overflow-y-auto h-full">
-                    <button
-                        className="w-2/3 text-white p-2 rounded-lg bg-blue-500 transition-200 duration-200 text-left"
-                        style={{ height: '3.5rem', paddingLeft: '15px', margin: '0.5rem 0', marginLeft: '1rem' }}
-                        onClick={openNewMailPopup}
-                    >
-                        <FontAwesomeIcon icon={faPen} />
-                        <span style={{ marginLeft: '15px' }}>Write</span>
-                    </button>
-                    <button className="w-full text-white p-2 rounded-r-full bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
-                        <FontAwesomeIcon icon={faInbox} />
-                        <span style={{ marginLeft: '15px' }}>Inbox</span>
-                    </button>
-                    <button className="w-full text-white p-2 rounded-r-full bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
-                        <FontAwesomeIcon icon={faPaperPlane} />
-                        <span style={{ marginLeft: '15px' }}>Send</span>
-                    </button>
+            <div className="flex">
+                <div className="flex-initial">
+                    <aside className={`w-full lg:w-64 bg-gray-950 p-4 h-screen ${sidebarVisible ? 'block' : 'hidden'}`}>
+                        <div className="overflow-y-auto h-full">
+                            <button
+                                className="w-2/3 text-white p-2 rounded-lg bg-blue-500 transition-200 duration-200 text-left"
+                                style={{ height: '3.5rem', paddingLeft: '15px', margin: '0.5rem 0', marginLeft: '1rem' }}
+                                onClick={openNewMailPopup}
+                            >
+                                <FontAwesomeIcon icon={faPen} />
+                                <span style={{ marginLeft: '15px' }}>Write</span>
+                            </button>
+                            <button className="w-full text-white p-2 rounded-r-full bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
+                                <FontAwesomeIcon icon={faInbox} />
+                                <span style={{ marginLeft: '15px' }}>Inbox</span>
+                            </button>
+                            <button className="w-full text-white p-2 rounded-r-full bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
+                                <FontAwesomeIcon icon={faPaperPlane} />
+                                <span style={{ marginLeft: '15px' }}>Send</span>
+                            </button>
+                        </div>
+                    </aside>
                 </div>
-            </aside>
-
-                <aside className={`bg-gray-900 min-h-screen p-4 md:w-1/6 text-white`}>
-                    <div className="overflow-y-auto h-full">
-                        {mails.map((mail, index) => (
-                            <MailItem
-                                key={index}
-                                //@ts-ignore Works fine (for now)
-                                subject={mail.subject}
-                                //@ts-ignore Works fine (for now)
-                                date={formatTime(mail.date)}
-                                onClick={() => handleMailItemClick(mail)}
-                            />
-                        ))}
-                    </div>
-                </aside>
-
-            <div className="container mx-auto p-4 text-white">
-                {selectedMail && (
-                    <div>
-                        <h2 className="text-2xl font-semibold mb-4">
+                <div className="flex-initial">
+                    <aside className={`w-full lg:w-80 bg-gray-900 min-h-screen p-4 text-white`}>
+                            <div className="overflow-y-auto h-full">
+                                {mails.map((mail, index) => (
+                                    <MailItem
+                                        key={index}
+                                        //@ts-ignore Works fine (for now)
+                                        subject={mail.subject}
+                                        //@ts-ignore Works fine (for now)
+                                        date={formatTime(mail.date)}
+                                        onClick={() => handleMailItemClick(mail)}
+                                    />
+                                ))}
+                            </div>
+                        </aside>
+                </div>
+                <div className="container mx-auto p-4 text-white">
+                    {selectedMail && (
+                        <div>
+                            <h2 className="text-2xl font-semibold mb-4">
+                                {/*@ts-ignore Works fine (for now)*/}
+                                {selectedMail.subject}
+                            </h2>
                             {/*@ts-ignore Works fine (for now)*/}
-                            {selectedMail.subject}
-                        </h2>
-                        {/*@ts-ignore Works fine (for now)*/}
-                        <p>Date: {selectedMail.date.toLocaleString()}</p>
-                        <div
-                            className="mt-4"
-                            dangerouslySetInnerHTML={{
-                                // @ts-ignore Works fine (for now)
-                                __html: selectedMail.body,
-                            }}
-                        />
+                            <p>Date: {selectedMail.date.toLocaleString()}</p>
+                            <div
+                                className="mt-4"
+                                dangerouslySetInnerHTML={{
+                                    // @ts-ignore Works fine (for now)
+                                    __html: selectedMail.body,
+                                }}
+                            />
+                        </div>
+                    )}
                     </div>
-                )}
                 </div>
-            </div>
             {newMailPopupVisible && <NewMailPopup onClose={closeNewMailPopup} />}
         </div>
     );
