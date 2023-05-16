@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { fetchMails } from "@/utils/mailService";
 
@@ -8,6 +7,8 @@ export async function POST() {
         return NextResponse.json({ mails }, { status: 200});
     } catch (e) {
         console.log(e);
-        return NextResponse.json({message: 'Error fetching mails' + e}, { status: 500});
+        return NextResponse.json({message: 'Error fetching imap' + e}, { status: 500});
     }
 }
+
+
