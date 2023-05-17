@@ -4,9 +4,8 @@ import React, { useState, useEffect } from 'react';
 import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import formatTime from "@/utils/formatTime";
+import extactTime from "@/utils/extactTime";
 import { faBars, faSearch, faTimes, faArrowUp, faSliders, faCog, faPen, faPaperPlane, faInbox } from "@fortawesome/free-solid-svg-icons";
-
-
 
 
 function NewMailPopup({ onClose }: { onClose: () => void }) {
@@ -138,8 +137,14 @@ export default function Home() {
         setSelectedMail(mail);
     };
 
+    const [showEmail, setShowEmail] = useState(false);
 
-    return (
+    const toggleEmail = () => {
+        setShowEmail(!showEmail);
+    };
+
+
+        return (
         <div className="flex flex-col min-h-screen">
             <div className="w-full">
                 <header className="bg-gray-950 py-4 px-8 flex justify-between">
@@ -214,12 +219,37 @@ export default function Home() {
                 <div className="container mx-auto p-4 text-white">
                     {selectedMail && (
                         <div>
-                            <h2 className="text-2xl font-semibold mb-4">
-                                {/*@ts-ignore Works fine (for now)*/}
-                                {selectedMail.subject}
-                            </h2>
-                            {/*@ts-ignore Works fine (for now)*/}
-                            <p>Date: {selectedMail.date.toLocaleString()}</p>
+                            <div className="w-full mb-4">
+                                <div className="border-b-2 border-gray-800 p-4">
+                                    <div className="flex justify-between items-start">
+                                        <div className="flex flex-col">
+                                            <p
+                                                className="text-sm mb-1 cursor-pointer"
+                                                onClick={toggleEmail}
+                                            >
+                                                {/*@ts-ignore Works fine (for now)*/}
+                                                From: {selectedMail.senderName}
+                                            </p>
+                                            {showEmail && (
+                                                <p className="text-sm">
+                                                    {/*@ts-ignore Works fine (for now)*/}
+                                                    {selectedMail.senderEmail}
+                                                </p>
+                                            )}
+                                            {/*@ts-ignore Works fine (for now)*/}
+                                            <p className="text-sm mt-2">To: {selectedMail.recipient}</p>
+                                        </div>
+                                        <div className="flex flex-col items-end">
+                                            {/*@ts-ignore Works fine (for now)*/}
+                                            <p className="text-sm">{extactTime(selectedMail.date)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h2 className="text-2xl font-semibold mt-2">
+                                    {/*@ts-ignore Works fine (for now)*/}
+                                    {selectedMail.subject}
+                                </h2>
+                            </div>
                             <div
                                 className="mt-4"
                                 dangerouslySetInnerHTML={{
@@ -229,8 +259,8 @@ export default function Home() {
                             />
                         </div>
                     )}
-                    </div>
                 </div>
+            </div>
             {newMailPopupVisible && <NewMailPopup onClose={closeNewMailPopup} />}
         </div>
     );
