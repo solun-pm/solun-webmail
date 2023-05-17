@@ -1,34 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+  
+  <a href="https://solun.pm">
+    <img width="180" src="https://raw.githubusercontent.com/solun-pm/solun-concepts/main/logo/logo.svg"/>
+  </a>
 
-## Getting Started
+  <p align="center">
 
-First, run the development server:
+![https://nextjs.org/](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![https://www.docker.com/](https://img.shields.io/static/v1?style=for-the-badge&message=Docker&color=2496ED&logo=Docker&logoColor=FFFFFF&label=)
+![https://www.mongodb.com/](https://img.shields.io/static/v1?style=for-the-badge&message=MongoDB&color=47A248&logo=MongoDB&logoColor=FFFFFF&label=)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+  </p>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+  <h1 align="center">Solun • Privacy at its highest</h1>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+  <p align="center">
+    Solun Webmail is a Webmailer that allows you to send mails with end-to-end encryption, without having to worry about your privacy. 
+  </p>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+</div>
 
-## Learn More
+<br>
 
-To learn more about Next.js, take a look at the following resources:
+## What is the purpose of Solun?
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Solun aims to fill the gap in the privacy space and create an independent, open service that allows you to send emails with end-to-end encryption - without using big services like
+Gmail or iCloud
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Developing locally
 
-## Deploy on Vercel
+### Docker
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+If you want to run Solun via Docker go to packages on the right side of the Github page and follow the instructions.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### NPM
+
+After cloning the repo, run `npm install` in the root of the project to install all necessary dependencies. Then run `npm run build` to build everything. Now you can run `npm run start`.
+
+## Contributing
+
+Read through our [Contribution Guide](./CONTRIBUTING.md) to learn how you can help make Solun better.
