@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import formatTime from "@/utils/formatTime";
+import extactTime from "@/utils/extactTime";
 import { faBars, faSearch, faTimes, faArrowUp, faSliders, faCog, faPen, faPaperPlane, faInbox } from "@fortawesome/free-solid-svg-icons";
-
+import { extractContentOutsideTags } from '@/utils/SenderName';
 
 
 
@@ -139,7 +140,31 @@ export default function Home() {
     };
 
 
-    return (
+    const emailRef = useRef(null);
+
+    useEffect(() => {
+        // Funktion, um das Pop-up zu schließen, wenn außerhalb geklickt wird
+        // @ts-ignore
+        const handleClickOutside = (event) => {
+            // @ts-ignore
+            if (emailRef.current && !emailRef.current.contains(event.target)) {
+                setShowEmail(false);
+            }
+        }
+
+        // Event-Listener beim Mounten des Components hinzufügen
+        document.addEventListener("mousedown", handleClickOutside);
+
+        // Event-Listener beim Unmounten des Components entfernen
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [emailRef]); // Abhängigkeit von useRef
+
+
+    const [showEmail, setShowEmail] = useState(false);
+
+        return (
         <div className="flex flex-col min-h-screen">
             <div className="w-full">
                 <header className="bg-gray-950 py-4 px-8 flex justify-between">
@@ -214,12 +239,39 @@ export default function Home() {
                 <div className="container mx-auto p-4 text-white">
                     {selectedMail && (
                         <div>
-                            <h2 className="text-2xl font-semibold mb-4">
-                                {/*@ts-ignore Works fine (for now)*/}
-                                {selectedMail.subject}
-                            </h2>
-                            {/*@ts-ignore Works fine (for now)*/}
-                            <p>Date: {selectedMail.date.toLocaleString()}</p>
+                            <div className="w-full mb-4">
+                                <div className="border-b-2 border-gray-800 p-4">
+                                    <div className="flex justify-between items-start">
+                                        <div className="relative flex flex-col">
+                                            <p
+                                                className="text-lg mb-1 cursor-pointer"
+                                                onClick={() => setShowEmail(!showEmail)}
+                                                ref={emailRef}
+                                            >
+                                                {/*@ts-ignore Works fine (for now)*/}
+                                                {extractContentOutsideTags(selectedMail.senderName)}
+                                            </p>
+                                            {showEmail && (
+                                                <div className="absolute bg-gray-800 border p-2 mt-1 text-xs">
+                                                    {/*@ts-ignore Works fine (for now)*/}
+                                                    {selectedMail.senderEmail}
+                                                </div>
+                                            )}
+                                            {/*@ts-ignore Works fine (for now)*/}
+                                            <p className="text-sm mt-2">To: {selectedMail.recipient}</p>
+                                        </div>
+
+                                        <div className="flex flex-col items-end">
+                                            {/*@ts-ignore Works fine (for now)*/}
+                                            <p className="text-sm">{extactTime(selectedMail.date)}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h2 className="text-2xl font-semibold mt-2">
+                                    {/*@ts-ignore Works fine (for now)*/}
+                                    {selectedMail.subject}
+                                </h2>
+                            </div>
                             <div
                                 className="mt-4"
                                 dangerouslySetInnerHTML={{
@@ -229,8 +281,8 @@ export default function Home() {
                             />
                         </div>
                     )}
-                    </div>
                 </div>
+            </div>
             {newMailPopupVisible && <NewMailPopup onClose={closeNewMailPopup} />}
         </div>
     );

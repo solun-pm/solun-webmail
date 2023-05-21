@@ -22,8 +22,12 @@ export const fetchMails = async (): Promise<Mail[]> => {
         let mails: Mail[] = [];
 
         const processMail = (mail: any) => {
-            const { subject, date, textAsHtml } = mail;
-            mails.push({ subject, date, body: textAsHtml });
+            const { subject, date, textAsHtml, from, to } = mail;
+            const senderName = from.text || '';
+            const senderEmail = from.value[0].address || '';
+            const recipientEmails = to.value.map((recipient: any) => recipient.address).join(', ');
+            //@ts-ignore works fine for now
+            mails.push({ subject, date, body: textAsHtml, senderName, senderEmail, recipient: recipientEmails });
         };
 
         imap.once("ready", () => {
@@ -67,6 +71,7 @@ export const fetchMails = async (): Promise<Mail[]> => {
 };
 
 
+
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
@@ -77,6 +82,9 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+
+
+// SMTP
 export async function sendMail(to: string, subject: string, text: string): Promise<void> {
     let info = await transporter.sendMail({
         from: `"Your Name" <${process.env.SMTP_USER}>`, //@TODO: sender address (Username from Database)
