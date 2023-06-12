@@ -43,12 +43,6 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
         setIsExpanded(true);
     }
 
-    const handleBlur = () => {
-        if (!copy && !blindcopy) {
-            setIsExpanded(false);
-        }
-    }
-
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
