@@ -5,7 +5,7 @@ import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import formatTime from "@/utils/formatTime";
 import extactTime from "@/utils/extactTime";
-import { faBars, faSearch, faTimes, faArrowUp, faSliders, faCog, faPen, faPaperPlane, faInbox } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faSearch, faSliders, faCog, faPen, faPaperPlane, faInbox } from "@fortawesome/free-solid-svg-icons";
 import { extractContentOutsideTags } from '@/utils/SenderName';
 import { NewMailPopup} from "@/components/NewMailPopup";
 
@@ -107,13 +107,13 @@ export default function Home() {
                             </button>
                         </div>
                     </div>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 justify-end">
+                        <p className="text-white hover:text-blue-500 transition-colors">yourname@solun.pm</p>
                         <button className="text-white">
                             <FontAwesomeIcon icon={faCog} />
                         </button>
                     </div>
                 </header>
-
             </div>
             <div className="flex">
                 <div className="flex-initial">

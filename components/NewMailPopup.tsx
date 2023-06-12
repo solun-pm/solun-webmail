@@ -118,13 +118,13 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
                                 onClick={handleExpandClick}
                             >
                             <span
-                                className={isHovering ? "text-blue-500 mr-2" : "text-white mr-2"}
+                                className={isHovering ? "text-blue-500 mr-2" : "text-gray-400 mr-2"}
                                 onMouseEnter={() => setIsHovering(true)}
                                 onMouseLeave={() => setIsHovering(false)}
                             >
                                 CC/BCC,
                             </span>
-                                                        <span className="text-white">
+                                                        <span className="text-gray-400">
                                 From: Your Name your@mailaddress
                             </span>
                             </button>
