@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faArrowUp, faPaperclip } from "@fortawesome/free-solid-svg-icons";
 
 interface NewMailPopupProps {
     onClose: () => void;
@@ -85,14 +85,22 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
                             New Mail
                         </h2>
                     </div>
-                    <button
-                        type="submit"
-                        className="w-12 h-12 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-700 flex items-center justify-center"
-                        onClick={handleSubmit}
-                    >
-                        <FontAwesomeIcon icon={faArrowUp} size="2x" />
-                    </button>
+                    <div className="flex items-center">
+                        <label className="w-6 h-6 text-blue-700 hover:text-blue-900 flex items-center justify-center mr-4 cursor-pointer">
+                            <input type="file" style={{display: 'none'}} />
+                            <FontAwesomeIcon icon={faPaperclip} size="lg" />
+                        </label>
+                        <button
+                            type="submit"
+                            className="w-12 h-12 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-700 flex items-center justify-center"
+                            onClick={handleSubmit}
+                        >
+                            <FontAwesomeIcon icon={faArrowUp} size="2x" />
+                        </button>
+                    </div>
                 </div>
+
+
                 <form className="mt-4 flex-grow" onSubmit={handleSubmit}>
                     <div className="border-t border-blue-500 bg-gray-950">
                         <input
