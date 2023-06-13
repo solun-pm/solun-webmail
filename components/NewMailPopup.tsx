@@ -8,7 +8,7 @@ interface NewMailPopupProps {
 
 export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
     // Form elements
-    const [to, setTo] = useState<string>('');
+    const [to, setTo] = useState<Email[]>([]);
     const [copy, setCopy] = useState<string>('');
     const [blindcopy, setBlindcopy] = useState<string>('');
     const [subject, setSubject] = useState<string>('');
@@ -70,6 +70,59 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
     };
 
 
+    //Einbettung
+    interface Email {
+        email: string;
+        valid: boolean;
+    }
+
+// Form elements
+    const [currentEmail, setCurrentEmail] = useState<string>('');
+    const [editMode, setEditMode] = useState<number | null>(null);
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+
+    const handleTagDoubleClick = (index: number) => {
+        setEditMode(index);
+        setCurrentEmail(to[index].email);
+    };
+
+    const handleTagBlur = (index: number, newEmail: string) => {
+        const emailRegex = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/;
+        const valid = emailRegex.test(newEmail);
+
+        if (newEmail === '') {
+            setTo(to.filter((emailObj, i) => i !== index));
+        } else {
+            setTo(to.map((emailObj, i) => i === index ? { email: newEmail, valid } : emailObj));
+        }
+        setEditMode(null);
+        setCurrentEmail('');
+    };
+
+    const handleAddEmail = (email: string) => {
+        const emailRegex = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/;
+        const valid = emailRegex.test(email);
+
+        setTo([...to, { email, valid }]);
+        setCurrentEmail('');
+    };
+    const handleStartEditing = (index: number) => {
+        setCurrentEmail(to[index].email);
+        setEditingIndex(index);
+    };
+
+    const handleEmailChange = (index: number, newEmail: string) => {
+        const emailRegex = /^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$/;
+        const valid = emailRegex.test(newEmail);
+
+        setTo(to.map((emailObj, i) => i === index ? { email: newEmail, valid } : emailObj));
+    };
+
+    const handleDeleteLastEmail = () => {
+        setTo(to.slice(0, -1));
+    };
+
+
     return (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-gray-950 p-8 rounded-lg w-10/12 lg:w-1/2 flex flex-col">
@@ -102,13 +155,49 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
 
 
                 <form className="mt-4 flex-grow" onSubmit={handleSubmit}>
-                    <div className="border-t border-blue-500 bg-gray-950">
+                    <div className="flex flex-wrap border-t border-blue-500 bg-gray-950">
+                        {to.map((emailObj, index) => (
+                            <div
+                                className={`email-tag px-2 py-1 m-1 rounded ${emailObj.valid ? 'bg-blue-500 text-white' : 'bg-red-500 text-black'}`}
+                                onDoubleClick={() => handleTagDoubleClick(index)}
+                            >
+                                {editMode === index ? (
+                                    <input
+                                        type="email"
+                                        value={currentEmail}
+                                        onBlur={(e) => handleTagBlur(index, e.target.value)}
+                                        onChange={(e) => setCurrentEmail(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                handleTagBlur(index, e.target.value);
+                                            }
+                                        }}
+                                        className={`${emailObj.valid ? 'bg-blue-500 text-white' : 'bg-red-500 text-black'}`}
+                                        autoFocus
+                                    />
+                                ) : (
+                                    emailObj.email
+                                )}
+                            </div>
+                        ))}
                         <input
-                            className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                            className="flex-grow p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
                             type="email"
                             placeholder="To:"
-                            value={to}
-                            onChange={(e) => setTo(e.target.value)}
+                            value={editMode !== null ? '' : currentEmail}
+                            onChange={(e) => setCurrentEmail(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Backspace' && currentEmail === '') {
+                                    e.preventDefault();
+                                    handleDeleteLastEmail();
+                                } else if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if (currentEmail !== '') {
+                                        handleAddEmail(currentEmail);
+                                    }
+                                }
+                            }}
                         />
                     </div>
                     {!isExpanded ? (
