@@ -173,7 +173,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
                                                 handleTagBlur(index, e.target.value);
                                             }
                                         }}
-                                        className={`${emailObj.valid ? 'bg-blue-500 text-white' : 'bg-red-500 text-black'}`}
+                                        className={`${emailObj.valid ? 'bg-blue-500 text-white focus:outline-none appearance-none' : 'bg-red-500 text-black focus:outline-none appearance-none'}`}
                                         autoFocus
                                     />
                                 ) : (
