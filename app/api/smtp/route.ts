@@ -5,7 +5,10 @@ export async function POST(req: Request) {
     try {
         const res = await req.json();
 
-        const to = res.to;
+        let to = res.to
+            .filter((emailObj: { email: string, valid: boolean }) => emailObj.valid)
+            .map((emailObj: { email: string, valid: boolean }) => emailObj.email)
+            .join(', ');
         const cc = res.copy; // cc
         const bcc = res.blindcopy; // bcc
         const subject = res.subject;

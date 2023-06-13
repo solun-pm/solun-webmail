@@ -176,6 +176,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
                                             }
                                         }}
                                         className={`${emailObj.valid ? 'bg-blue-500 text-white focus:outline-none appearance-none' : 'bg-red-500 text-black focus:outline-none appearance-none'}`}
+                                        style={{ width: `${currentEmail.length}ch` }} // This will make the input field width grow with the content
                                         autoFocus
                                     />
                                 ) : (
