@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  solun:
+    image: ghcr.io/solun-pm/solun-webmail:main
+    container_name: solun
+    ports:
+      - 3000:3000
+    environment:
+      - IMAP_USER=
+      - IMAP_PASS=
+      - IMAP_HOST=
+      - IMAP_PORT=
+      - SMTP_HOST=
+      - SMTP_PORT=
+      - SMTP_USER=
+      - SMTP_PASS=
+    restart: always
