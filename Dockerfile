@@ -1,0 +1,18 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm install
+
+ENV IMAP_USER=
+ENV IMAP_PASS=
+ENV IMAP_HOST=
+ENV IMAP_PORT=
+ENV SMTP_HOST=
+ENV SMTP_PORT=
+ENV SMTP_USER=
+ENV SMTP_PASS=
+
+CMD npm run build && npm run start
