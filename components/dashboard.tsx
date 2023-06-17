@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { Menu } from '@headlessui/react';
 import { useRouter } from 'next/navigation';
 import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import formatTime from "@/utils/formatTime";
 import extactTime from "@/utils/extactTime";
-import { faBars, faSearch, faSliders, faCog, faPen, faPaperPlane, faInbox } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faSearch, faSliders, faCog, faSignOutAlt , faPen, faPaperPlane, faInbox, faUser } from "@fortawesome/free-solid-svg-icons";
 import { extractContentOutsideTags } from '@/utils/SenderName';
 import { NewMailPopup} from "@/components/NewMailPopup";
 
@@ -118,18 +119,48 @@ export default function Home({userInfo, userDetails}: any) {
                         </div>
                     </div>
                     <div className="flex items-center space-x-4 justify-end">
-                        <p className="block rounded bg-blue-500 p-2 text-white transition-colors cursor-pointer">{userInfo.fqe}</p>
-                        <button className="block rounded bg-blue-500 p-2 text-white transition-colors cursor-pointer"
-                            onClick={() => router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/dashboard')}
-                        >
-                            <FontAwesomeIcon icon={faCog} />
-                        </button>
-                        <button
-                            onClick={handleLogout}
-                            className="ml-auto text-white font-bold py-2 px-4 rounded transition-all hover:bg-blue-500"
-                        >
-                            Logout
-                        </button>
+                        <Menu as="div" className="relative inline-block text-left">
+                            <div>
+                            <Menu.Button className="block rounded bg-blue-500 p-2 text-white transition-colors cursor-pointer">
+                                <FontAwesomeIcon icon={faUser} />
+                                <span className="md:inline hidden ml-2">{userInfo.fqe}</span>
+                            </Menu.Button>
+                            </div>
+                            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-1">
+                                <p className="group flex rounded-md items-center w-full px-2 py-2 text-sm text-gray-900">
+                                <FontAwesomeIcon icon={faUser} className="mr-3"/>
+                                    {userInfo.fqe}
+                                </p>
+                                <Menu.Item>
+                                {({ active }) => (
+                                    <button
+                                    className={`${
+                                        active ? "bg-blue-500 text-white" : "text-gray-900"
+                                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                    onClick={() => router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/dashboard/settings')}
+                                    >
+                                    <FontAwesomeIcon icon={faCog} className="mr-3"/>
+                                    Settings
+                                    </button>
+                                )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                {({ active }) => (
+                                    <button
+                                    className={`${
+                                        active ? "bg-blue-500 text-white" : "text-gray-900"
+                                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                    onClick={handleLogout}
+                                    >
+                                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-3"/>
+                                    Logout
+                                    </button>
+                                )}
+                                </Menu.Item>
+                            </div>
+                            </Menu.Items>
+                        </Menu>
                     </div>
                 </header>
             </div>
