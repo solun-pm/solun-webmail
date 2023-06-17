@@ -18,11 +18,14 @@
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
+    "bcrypt": "^5.1.0",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
     "fs": "^0.0.1-security",
     "imap": "^0.8.19",
+    "jsonwebtoken": "^9.0.0",
     "mailparser": "^3.6.4",
+    "mongoose": "^7.3.0",
     "net": "^1.0.2",
     "next": "13.4.1",
     "next-themes": "^0.2.1",
@@ -36,6 +39,7 @@
   },
   "devDependencies": {
     "@types/imap": "^0.8.36",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/mailparser": "^3.4.0",
     "@types/nodemailer": "^6.4.7"
   }
