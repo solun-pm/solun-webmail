@@ -11,6 +11,11 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
   const tempToken = params.auth[1];
   const decryptToken = params.auth[2];
 
+  if (!tempToken) {
+    router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
+    return null;
+  }
+
   const [formData, setFormData] = useState({
     fqe: "",
     password: "",
@@ -20,9 +25,44 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
   const [fast_login, setFastLogin] = useState(false);
 
   useEffect(() => {
-    if(tempToken) {
-      getFqe();
-    }
+    const verifyTokenAndLogin = async () => {
+      const storedJwt = localStorage.getItem("jwt");
+      if (storedJwt) {
+        try {
+          const response = await fetch("/api/user/jwt", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                token: storedJwt,
+                onlyVerify: true,
+            }),
+          });
+
+          if (!response.ok) {
+            localStorage.removeItem("jwt");
+            console.error("Stored JWT is invalid. Removing it.");
+            return;
+          }
+
+          const data = await response.json();
+          if (data.isValid) {
+            router.push("/");
+            return;
+          }
+
+        } catch (error) {
+          console.error("Error verifying JWT:", error);
+        }
+      }
+    
+      if(tempToken) {
+        getFqe();
+      }
+    };
+
+    verifyTokenAndLogin();
   }, []);
 
   useEffect(() => {
@@ -45,7 +85,7 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
       if (!response.ok) {
         console.error(response);
         setIsSubmitting(false);
-        router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN as string);
+        router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
         return;
       }
 
@@ -56,7 +96,8 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
       setIsSubmitting(false);
     } catch (error) {
       console.error(error);
-    setIsSubmitting(false);
+      setIsSubmitting(false);
+      router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
     }
   };
 
@@ -176,7 +217,7 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
           <p className="mb-4">
             Don't want to enter your password every time? 
             <br />
-            <a href={process.env.NEXT_PUBLIC_AUTH_DOMAIN_SETTINGS} className="text-blue-500 hover:text-blue-600">
+            <a href={process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/dashboard/settings'} className="text-blue-500 hover:text-blue-600">
               Activate Fast Login
             </a>
           </p>
