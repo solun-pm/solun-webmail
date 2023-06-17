@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import formatTime from "@/utils/formatTime";
@@ -10,9 +11,15 @@ import { extractContentOutsideTags } from '@/utils/SenderName';
 import { NewMailPopup} from "@/components/NewMailPopup";
 
 
-export default function Home() {
+export default function Home({userInfo, userDetails}: any) {
+    const router = useRouter();
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [newMailPopupVisible, setNewMailPopupVisible] = useState(false);
+
+    const handleLogout = () => {
+        localStorage.removeItem("jwt");
+        router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
+      };
 
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
@@ -32,20 +39,23 @@ export default function Home() {
     useEffect(() => {
         const loadMails = async () => {
             try {
-                const res = await fetch('/api/imap', {
+                const res = await fetch('/api/mail/fetchMails', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify({
+                        fqe: userInfo.fqe,
+                        password: userInfo.password,
+                    }),
                 });
-                const data = await res.json();
                 if(!res.ok) {
-                    console.log(data);
-                } else {
-                    //@ts-ignore works fine for now
-                    const sortedMails = data.mails.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    setMails(sortedMails);
+                    console.error('Error fetching mails' + res)
                 }
+                const data = await res.json();
+                //@ts-ignore works fine for now
+                const sortedMails = data.mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+                setMails(sortedMails);
             } catch (e) {
                 console.error(e);
             }
@@ -99,8 +109,8 @@ export default function Home() {
                             <input
                                 type="text"
                                 placeholder="Search"
-                                className="w-full border bg-gray-950 text-white border-gray-300 pl-10 pr-12 py-2 rounded"
-                                style={{ height: '40px', border: '1px solid white' }}
+                                className="w-full border bg-gray-950 text-white border-slate-500 pl-10 pr-12 py-2 rounded appearance-none focus:outline-none"
+                                style={{ height: '40px'}}
                             />
                             <button className="p-2 rounded-full transition-200 duration-200 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <FontAwesomeIcon icon={faSliders} />
@@ -108,9 +118,17 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="flex items-center space-x-4 justify-end">
-                        <p className="text-white hover:text-blue-500 transition-colors">yourname@solun.pm</p>
-                        <button className="text-white">
+                        <p className="block rounded bg-blue-500 p-2 text-white transition-colors cursor-pointer">{userInfo.fqe}</p>
+                        <button className="block rounded bg-blue-500 p-2 text-white transition-colors cursor-pointer"
+                            onClick={() => router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/dashboard')}
+                        >
                             <FontAwesomeIcon icon={faCog} />
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            className="ml-auto text-white font-bold py-2 px-4 rounded transition-all hover:bg-blue-500"
+                        >
+                            Logout
                         </button>
                     </div>
                 </header>
