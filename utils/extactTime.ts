@@ -11,5 +11,4 @@ function getFormattedDateWithTime(dateString: string): string {
         `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 }
 
-// @ts-ignore
 export default getFormattedDateWithTime;
