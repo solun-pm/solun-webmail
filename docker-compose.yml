@@ -8,6 +8,8 @@ services:
     environment:
       - MONGODB_URL=
       - JWT_SECRET_KEY=
+      - MAILSERVER_BASEURL=
+      - MAILSERVER_API_KEY=
       - NEXT_PUBLIC_MAIN_DOMAIN=
       - NEXT_PUBLIC_AUTH_DOMAIN=
       - NEXT_PUBLIC_AUTH_DOMAIN_SETTINGS=
