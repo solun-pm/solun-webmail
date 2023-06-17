@@ -85,12 +85,15 @@ const transporter = nodemailer.createTransport({
 
 
 // SMTP
-export async function sendMail(to: string, subject: string, text: string): Promise<void> {
+export async function sendMail(to: string, cc: string, bcc: string, subject: string, text: string, attachments: any): Promise<void> {
     let info = await transporter.sendMail({
         from: `"Your Name" <${process.env.SMTP_USER}>`, //@TODO: sender address (Username from Database)
         to: to, // list of receivers
+        cc: cc, // list of carbon copy receivers
+        bcc: bcc, // list of blind carbon copy receivers
         subject: subject, // Subject line
         text: text, // plain text body
+        attachments: attachments // attachments
     });
 
     console.log('Message sent: %s', info.messageId);
