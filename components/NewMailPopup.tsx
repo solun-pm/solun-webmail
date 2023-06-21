@@ -4,9 +4,11 @@ import { faTimes, faArrowUp, faPaperclip } from "@fortawesome/free-solid-svg-ico
 
 interface NewMailPopupProps {
     onClose: () => void;
+    userInfo: any;
+    userDetails: any;
 }
 
-export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
+export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, userDetails }) => {
     // Form elements
     const [to, setTo] = useState<Email[]>([]);
     const [copy, setCopy] = useState<string>('');
@@ -217,7 +219,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
                                 CC/BCC,
                             </span>
                                                         <span className="text-gray-400">
-                                From: Your Name your@mailaddress
+                                From: {userDetails.username} {userDetails.fqe}
                             </span>
                             </button>
                         </div>

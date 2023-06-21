@@ -249,7 +249,7 @@ export default function Home({userInfo, userDetails}: any) {
                     )}
                 </div>
             </div>
-            {newMailPopupVisible && <NewMailPopup onClose={closeNewMailPopup} />}
+            {newMailPopupVisible && <NewMailPopup onClose={closeNewMailPopup} userInfo={userInfo} userDetails={userDetails}/>}
         </div>
     );
 }
