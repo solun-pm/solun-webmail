@@ -36,6 +36,8 @@
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "solun-database-package": "^1.0.6",
+    "solun-general-package": "^1.0.19",
     "tailwindcss": "3.3.2",
     "tls": "^0.0.1",
     "typescript": "5.0.4"
