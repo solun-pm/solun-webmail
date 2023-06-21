@@ -52,3 +52,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          
+      - name: Restart Node 1
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_SECRET }}/hooks/restart-app-1
+          
+      - name: Wait for server 1 to restart
+        run: |
+          sleep 60s
+
+      - name: Trigger webhook for server 2
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_SECRET }}/hooks/restart-app-2
