@@ -15,11 +15,7 @@ export const fetchMails = async (fqe: string, password: string): Promise<Mail[]>
         password: password, // user pwd
         host: process.env.NEXT_PUBLIC_MAIL_HOST,
         port: process.env.NEXT_PUBLIC_IMAP_PORT,
-        tls: {
-            rejectUnauthorized: false, // optional, can help avoid certain errors
-            minVersion: 'TLSv1.2',
-            maxVersion: 'TLSv1.3',
-        },
+        tls: true,
     };
 
     return new Promise((resolve, reject) => {
