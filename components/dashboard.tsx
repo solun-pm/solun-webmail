@@ -5,11 +5,10 @@ import { Menu } from '@headlessui/react';
 import { useRouter } from 'next/navigation';
 import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import formatTime from "@/utils/formatTime";
-import extactTime from "@/utils/extactTime";
+import { getFormattedDateWithTime, getFormattedDate, extractContentOutsideTags } from "solun-general-package";
 import { faBars, faSearch, faSliders, faCog, faSignOutAlt , faPen, faPaperPlane, faInbox, faUser } from "@fortawesome/free-solid-svg-icons";
-import { extractContentOutsideTags } from '@/utils/SenderName';
 import { NewMailPopup} from "@/components/NewMailPopup";
+import Image from 'next/image';
 
 
 export default function Home({userInfo, userDetails}: any) {
@@ -62,7 +61,7 @@ export default function Home({userInfo, userDetails}: any) {
             }
         };
         loadMails();
-    }, []);
+    }, [userInfo.fqe, userInfo.password]);
 
     const handleMailItemClick = (mail : any) => {
         setSelectedMail(mail);
@@ -101,7 +100,7 @@ export default function Home({userInfo, userDetails}: any) {
                         <button onClick={toggleSidebar} className="text-white">
                             <FontAwesomeIcon icon={faBars} />
                         </button>
-                        <img src="/logo.svg" alt="Logo" className="hidden lg:block h-8 w-8" />
+                        <Image src="/logo.svg" alt="Logo" className="hidden lg:block h-8 w-8" />
                         <h1 className="hidden lg:block text-white text-xl font-semibold">Solun</h1>
                     </div>
                     <div className="w-full lg:w-3/5 flex items-center justify-between bg-gray-950">
@@ -196,7 +195,7 @@ export default function Home({userInfo, userDetails}: any) {
                                         //@ts-ignore Works fine (for now)
                                         subject={mail.subject}
                                         //@ts-ignore Works fine (for now)
-                                        date={formatTime(mail.date)}
+                                        date={getFormattedDateWithTime(mail.date)}
                                         onClick={() => handleMailItemClick(mail)}
                                     />
                                 ))}
@@ -230,7 +229,7 @@ export default function Home({userInfo, userDetails}: any) {
 
                                         <div className="flex flex-col items-end">
                                             {/*@ts-ignore Works fine (for now)*/}
-                                            <p className="text-sm">{extactTime(selectedMail.date)}</p>
+                                            <p className="text-sm">{getFormattedDate(selectedMail.date)}</p>
                                         </div>
                                     </div>
                                 </div>

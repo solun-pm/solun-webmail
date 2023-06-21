@@ -20,7 +20,7 @@ export default function Home() {
             return;
         }
 
-        const response = await fetch("/api/user/jwt", {
+        const response = await fetch(process.env.NEXT_PUBLIC_API_DOMAIN + "/webmail/jwt_details", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export default function Home() {
             const data = await response.json();
             setUserInfo(data);
 
-        const detailsResponse = await fetch("/api/user/details", {
+        const detailsResponse = await fetch(process.env.NEXT_PUBLIC_API_DOMAIN + "/webmail/user_details", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export default function Home() {
             setUserDetails(detailsData);
         };
         fetchUserInfo();
-    }, []);
+    }, [router]);
 
     if (!userInfo || !userDetails) {
         return null;

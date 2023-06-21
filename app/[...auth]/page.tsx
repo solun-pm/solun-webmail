@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser, faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
@@ -11,11 +11,6 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
   const tempToken = params.auth[1];
   const decryptToken = params.auth[2];
 
-  if (!tempToken) {
-    router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
-    return null;
-  }
-
   const [formData, setFormData] = useState({
     fqe: "",
     password: "",
@@ -24,12 +19,61 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fast_login, setFastLogin] = useState(false);
 
+  const getFqe = useCallback(async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_DOMAIN + "/webmail/pre_auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tempToken }),
+      });
+
+      if (!response.ok) {
+        console.error(response);
+        setIsSubmitting(false);
+        router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
+        return;
+      }
+
+      const data = await response.json();
+      setFastLogin(data.fast_login);
+
+      setFormData({ ...formData, fqe: data.fqe });
+      setIsSubmitting(false);
+    } catch (error) {
+      console.error(error);
+      setIsSubmitting(false);
+      router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
+    }
+  }, [tempToken, formData, router]);
+
+  const loginWithTokens = useCallback(async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_DOMAIN + "/webmail/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ fqe: formData.fqe, tempToken, decryptToken, fast_login }),
+      });
+      const data = await response.json();
+      localStorage.setItem("jwt", data.token);
+      router.push("/");
+    } catch (error) {
+      setIsSubmitting(false);
+      console.error(error);
+    }
+  }, [formData.fqe, tempToken, decryptToken, fast_login, router]);
+
   useEffect(() => {
     const verifyTokenAndLogin = async () => {
       const storedJwt = localStorage.getItem("jwt");
       if (storedJwt) {
         try {
-          const response = await fetch("/api/user/jwt", {
+          const response = await fetch(process.env.NEXT_PUBLIC_API_DOMAIN + "/webmail/jwt_details", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -63,62 +107,18 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
     };
 
     verifyTokenAndLogin();
-  }, []);
+  }, [getFqe, router, tempToken]);
 
   useEffect(() => {
     if(fast_login) {
       loginWithTokens();
     }
-  }, [fast_login])
+  }, [loginWithTokens, fast_login]);
 
-  const getFqe = async () => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/user/preAuth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ tempToken }),
-      });
-
-      if (!response.ok) {
-        console.error(response);
-        setIsSubmitting(false);
-        router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
-        return;
-      }
-
-      const data = await response.json();
-      setFastLogin(data.fast_login);
-
-      setFormData({ ...formData, fqe: data.fqe });
-      setIsSubmitting(false);
-    } catch (error) {
-      console.error(error);
-      setIsSubmitting(false);
-      router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
-    }
-  };
-
-  const loginWithTokens = async () => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ fqe: formData.fqe, tempToken, decryptToken, fast_login }),
-      });
-      const data = await response.json();
-      localStorage.setItem("jwt", data.token);
-      router.push("/");
-    } catch (error) {
-      setIsSubmitting(false);
-      console.error(error);
-    }
-  };
+  if (!tempToken) {
+    router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
+    return null;
+  }
 
   const handleChange = (e: any) => {
     const name = e.target.name;
@@ -140,7 +140,7 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
     }
 
     try {
-      const response = await fetch("/api/user/login", {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_DOMAIN + "/webmail/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -215,7 +215,7 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
         </form>
         <div className="mt-5 text-center">
           <p className="mb-4">
-            Don't want to enter your password every time? 
+            Don&apos;t want to enter your password every time? 
             <br />
             <a href={process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/dashboard/settings'} className="text-blue-500 hover:text-blue-600">
               Activate Fast Login
