@@ -47,7 +47,7 @@ const LoginPage = ({ params }: { params: { auth: string[] } }) => {
       setIsSubmitting(false);
       router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
     }
-  }, [tempToken, formData, router]);
+  }, [tempToken, router]);
 
   const loginWithTokens = useCallback(async () => {
     setIsSubmitting(true);
