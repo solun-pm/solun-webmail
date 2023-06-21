@@ -251,7 +251,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                                     <input
                                         className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
                                         type="text"
-                                        placeholder="From: Your Name your@mailaddress"
+                                        placeholder={'From: ' + userDetails.username + ' ' + userDetails.fqe}
                                         readOnly
                                     />
                                 </div>
