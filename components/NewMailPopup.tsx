@@ -54,6 +54,9 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    username: userDetails.username,
+                    fqe: userInfo.fqe,
+                    password: userInfo.password,
                     to,
                     copy,
                     blindcopy,

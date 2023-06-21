@@ -15,7 +15,11 @@ export const fetchMails = async (fqe: string, password: string): Promise<Mail[]>
         password: password, // user pwd
         host: process.env.NEXT_PUBLIC_MAIL_HOST,
         port: process.env.NEXT_PUBLIC_IMAP_PORT,
-        tls: true,
+        tls: {
+            rejectUnauthorized: false, // optional, can help avoid certain errors
+            minVersion: 'TLSv1.2',
+            maxVersion: 'TLSv1.3',
+        },
     };
 
     return new Promise((resolve, reject) => {
@@ -72,7 +76,7 @@ export const fetchMails = async (fqe: string, password: string): Promise<Mail[]>
 };
 
 // SMTP
-export async function sendMail(fqe: string, password: string, to: string, cc: string, bcc: string, subject: string, text: string, attachments: any): Promise<void> {
+export async function sendMail(username: string, fqe: string, password: string, to: string, cc: string, bcc: string, subject: string, text: string, attachments: any): Promise<void> {
     const transporter = nodemailer.createTransport({
         host: process.env.NEXT_PUBLIC_MAIL_HOST,
         port: Number(process.env.NEXT_PUBLIC_SMTP_PORT),
@@ -81,9 +85,14 @@ export async function sendMail(fqe: string, password: string, to: string, cc: st
             user: fqe, // your email
             pass: password // your email password
         },
+        tls: {
+            maxVersion: 'TLSv1.3',
+            minVersion: 'TLSv1.2',
+            ciphers: 'TLS_AES_128_GCM_SHA256',
+        }
     });
     let info = await transporter.sendMail({
-        from: `"Your Name" <${process.env.SMTP_USER}>`, //@TODO: sender address (Username from Database)
+        from: `"${username}" <${fqe}>`, // sender address
         to: to, // list of receivers
         cc: cc, // list of carbon copy receivers
         bcc: bcc, // list of blind carbon copy receivers
