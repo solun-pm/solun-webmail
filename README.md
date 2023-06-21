@@ -37,6 +37,18 @@ If you want to run Solun via Docker go to packages on the right side of the Gith
 
 After cloning the repo, run `npm install` in the root of the project to install all necessary dependencies. Then run `npm run build` to build everything. Now you can run `npm run start`.
 
+### Development on Solun Webmail
+As im really lazy right now (~DanielWTE) I didn't build in a "Skip-Auth Procedure" so you need to start up Solun Auth with
+```bash
+npm run dev -- -p 3001
+```
+and then start Solun Webmail with
+```bash
+npm run dev
+```
+
+after some .env changes and a test account you can login with the test account via solun auth and then click on "go to webmail" in the dashboard.
+
 ## Contributing
 
 Read through our [Contribution Guide](./CONTRIBUTING.md) to learn how you can help make Solun better.

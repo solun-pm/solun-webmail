@@ -8,15 +8,16 @@ interface Mail {
     body: string;
 }
 
-const imapConfig = {
-    user: process.env.IMAP_USER,
-    password: process.env.IMAP_PASS,
-    host: process.env.IMAP_HOST,
-    port: process.env.IMAP_PORT,
-    tls: true,
-};
+export const fetchMails = async (fqe: string, password: string): Promise<Mail[]> => {
 
-export const fetchMails = async (): Promise<Mail[]> => {
+    const imapConfig = {
+        user: fqe, // fqe
+        password: password, // user pwd
+        host: process.env.NEXT_PUBLIC_MAIL_HOST,
+        port: process.env.NEXT_PUBLIC_IMAP_PORT,
+        tls: true,
+    };
+
     return new Promise((resolve, reject) => {
         const imap = new Imap(imapConfig as any);
         let mails: Mail[] = [];
@@ -70,22 +71,17 @@ export const fetchMails = async (): Promise<Mail[]> => {
     });
 };
 
-
-
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: true, // true for 465, false for other ports
-    auth: {
-        user: process.env.SMTP_USER, // your email
-        pass: process.env.SMTP_PASS // your email password
-    },
-});
-
-
-
 // SMTP
-export async function sendMail(to: string, cc: string, bcc: string, subject: string, text: string, attachments: any): Promise<void> {
+export async function sendMail(fqe: string, password: string, to: string, cc: string, bcc: string, subject: string, text: string, attachments: any): Promise<void> {
+    const transporter = nodemailer.createTransport({
+        host: process.env.NEXT_PUBLIC_MAIL_HOST,
+        port: Number(process.env.NEXT_PUBLIC_SMTP_PORT),
+        secure: true, // true for 465, false for other ports
+        auth: {
+            user: fqe, // your email
+            pass: password // your email password
+        },
+    });
     let info = await transporter.sendMail({
         from: `"Your Name" <${process.env.SMTP_USER}>`, //@TODO: sender address (Username from Database)
         to: to, // list of receivers

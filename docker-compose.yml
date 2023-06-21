@@ -2,16 +2,20 @@ version: '3.8'
 services:
   solun:
     image: ghcr.io/solun-pm/solun-webmail:main
-    container_name: solun
+    container_name: solun-webmail
     ports:
       - 3000:3000
     environment:
-      - IMAP_USER=
-      - IMAP_PASS=
-      - IMAP_HOST=
-      - IMAP_PORT=
-      - SMTP_HOST=
-      - SMTP_PORT=
-      - SMTP_USER=
-      - SMTP_PASS=
+      - MONGODB_URL=
+      - JWT_SECRET_KEY=
+      - MAILSERVER_BASEURL=
+      - MAILSERVER_API_KEY=
+      - NEXT_PUBLIC_MAIN_DOMAIN=
+      - NEXT_PUBLIC_API_DOMAIN=
+      - NEXT_PUBLIC_AUTH_DOMAIN=
+      - NEXT_PUBLIC_AUTH_DOMAIN_SETTINGS=
+      - NEXT_PUBLIC_WEBMAIL_DOMAIN=
+      - NEXT_PUBLIC_MAIL_HOST=
+      - NEXT_PUBLIC_IMAP_PORT=
+      - NEXT_PUBLIC_SMTP_PORT=
     restart: always

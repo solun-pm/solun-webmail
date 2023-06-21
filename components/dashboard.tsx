@@ -1,18 +1,25 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { Menu } from '@headlessui/react';
+import { useRouter } from 'next/navigation';
 import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import formatTime from "@/utils/formatTime";
-import extactTime from "@/utils/extactTime";
-import { faBars, faSearch, faSliders, faCog, faPen, faPaperPlane, faInbox } from "@fortawesome/free-solid-svg-icons";
-import { extractContentOutsideTags } from '@/utils/SenderName';
+import { getFormattedDateWithTime, getFormattedDate, extractContentOutsideTags } from "solun-general-package";
+import { faBars, faSearch, faSliders, faCog, faSignOutAlt , faPen, faPaperPlane, faInbox, faUser } from "@fortawesome/free-solid-svg-icons";
 import { NewMailPopup} from "@/components/NewMailPopup";
+import Image from 'next/image';
 
 
-export default function Home() {
+export default function Home({userInfo, userDetails}: any) {
+    const router = useRouter();
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [newMailPopupVisible, setNewMailPopupVisible] = useState(false);
+
+    const handleLogout = () => {
+        localStorage.removeItem("jwt");
+        router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
+      };
 
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
@@ -32,26 +39,29 @@ export default function Home() {
     useEffect(() => {
         const loadMails = async () => {
             try {
-                const res = await fetch('/api/imap', {
+                const res = await fetch('/api/mail/fetchMails', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify({
+                        fqe: userInfo.fqe,
+                        password: userInfo.password,
+                    }),
                 });
-                const data = await res.json();
                 if(!res.ok) {
-                    console.log(data);
-                } else {
-                    //@ts-ignore works fine for now
-                    const sortedMails = data.mails.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    setMails(sortedMails);
+                    console.error('Error fetching mails' + res)
                 }
+                const data = await res.json();
+                //@ts-ignore works fine for now
+                const sortedMails = data.mails.sort((a, b) => new Date(b.date) - new Date(a.date));
+                setMails(sortedMails);
             } catch (e) {
                 console.error(e);
             }
         };
         loadMails();
-    }, []);
+    }, [userInfo.fqe, userInfo.password]);
 
     const handleMailItemClick = (mail : any) => {
         setSelectedMail(mail);
@@ -90,7 +100,7 @@ export default function Home() {
                         <button onClick={toggleSidebar} className="text-white">
                             <FontAwesomeIcon icon={faBars} />
                         </button>
-                        <img src="/logo.svg" alt="Logo" className="hidden lg:block h-8 w-8" />
+                        <Image src="/logo.svg" alt="Logo" className="hidden lg:block h-8 w-8" />
                         <h1 className="hidden lg:block text-white text-xl font-semibold">Solun</h1>
                     </div>
                     <div className="w-full lg:w-3/5 flex items-center justify-between bg-gray-950">
@@ -99,8 +109,8 @@ export default function Home() {
                             <input
                                 type="text"
                                 placeholder="Search"
-                                className="w-full border bg-gray-950 text-white border-gray-300 pl-10 pr-12 py-2 rounded"
-                                style={{ height: '40px', border: '1px solid white' }}
+                                className="w-full border bg-gray-950 text-white border-slate-500 pl-10 pr-12 py-2 rounded appearance-none focus:outline-none"
+                                style={{ height: '40px'}}
                             />
                             <button className="p-2 rounded-full transition-200 duration-200 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                                 <FontAwesomeIcon icon={faSliders} />
@@ -108,10 +118,48 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="flex items-center space-x-4 justify-end">
-                        <p className="text-white hover:text-blue-500 transition-colors">yourname@solun.pm</p>
-                        <button className="text-white">
-                            <FontAwesomeIcon icon={faCog} />
-                        </button>
+                        <Menu as="div" className="relative inline-block text-left">
+                            <div>
+                            <Menu.Button className="block rounded bg-blue-500 p-2 text-white transition-colors cursor-pointer">
+                                <FontAwesomeIcon icon={faUser} />
+                                <span className="md:inline hidden ml-2">{userInfo.fqe}</span>
+                            </Menu.Button>
+                            </div>
+                            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-1">
+                                <p className="group flex rounded-md items-center w-full px-2 py-2 text-sm text-gray-900">
+                                <FontAwesomeIcon icon={faUser} className="mr-3"/>
+                                    {userInfo.fqe}
+                                </p>
+                                <Menu.Item>
+                                {({ active }) => (
+                                    <button
+                                    className={`${
+                                        active ? "bg-blue-500 text-white" : "text-gray-900"
+                                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                    onClick={() => router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/dashboard/settings')}
+                                    >
+                                    <FontAwesomeIcon icon={faCog} className="mr-3"/>
+                                    Settings
+                                    </button>
+                                )}
+                                </Menu.Item>
+                                <Menu.Item>
+                                {({ active }) => (
+                                    <button
+                                    className={`${
+                                        active ? "bg-blue-500 text-white" : "text-gray-900"
+                                    } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                    onClick={handleLogout}
+                                    >
+                                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-3"/>
+                                    Logout
+                                    </button>
+                                )}
+                                </Menu.Item>
+                            </div>
+                            </Menu.Items>
+                        </Menu>
                     </div>
                 </header>
             </div>
@@ -147,7 +195,7 @@ export default function Home() {
                                         //@ts-ignore Works fine (for now)
                                         subject={mail.subject}
                                         //@ts-ignore Works fine (for now)
-                                        date={formatTime(mail.date)}
+                                        date={getFormattedDateWithTime(mail.date)}
                                         onClick={() => handleMailItemClick(mail)}
                                     />
                                 ))}
@@ -181,7 +229,7 @@ export default function Home() {
 
                                         <div className="flex flex-col items-end">
                                             {/*@ts-ignore Works fine (for now)*/}
-                                            <p className="text-sm">{extactTime(selectedMail.date)}</p>
+                                            <p className="text-sm">{getFormattedDate(selectedMail.date)}</p>
                                         </div>
                                     </div>
                                 </div>

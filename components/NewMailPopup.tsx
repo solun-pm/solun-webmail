@@ -46,7 +46,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const response = await fetch('/api/smtp', {
+            const response = await fetch('/api/mail/sendMail', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

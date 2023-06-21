@@ -9,9 +9,26 @@ config.autoAddCss = false
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_MAIN_DOMAIN as string),
   title: 'Solun • Webmail',
-  description: 'Solun is a service that allows you to share files, text and sending emails with end-to-end encryption, without storing any user related data on our servers. Become anonymous and protect your privacy today.',
-}
+  description: 'Send and receive emails with the fast and secure Solun Webmail.',
+  tags: ['Solun', 'Privacy', 'Anonymous', 'Encryption', 'E-Mails', 'Freemail'],
+  openGraph: {
+    title: 'Solun • Webmail',
+    description: 'Send and receive emails with the fast and secure Solun Webmail.',
+    siteName: 'Solun • Webmail',
+    images: [
+      {
+        url: 'https://cdn.solun.pm/images/logo/solun-logo.png',
+        width: 512,
+        height: 512,
+        alt: 'Solun Logo',
+      },
+    ],
+  },
+  locale: 'en_US',
+  type: 'website',
+};
 
 export default function RootLayout({
   children,

@@ -15,7 +15,10 @@ export async function POST(req: Request) {
         const message = res.message;
         const attachments = res.attachments; // handle attachments
 
-        await sendMail(to, cc, bcc, subject, message, attachments);
+        const fqe = res.fqe;
+        const password = res.password;
+
+        await sendMail(fqe, password, to, cc, bcc, subject, message, attachments);
         return NextResponse.json({ message: 'Ok' }, { status: 200});
     } catch (e) {
         console.log(e);
