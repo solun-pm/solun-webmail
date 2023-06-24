@@ -18,7 +18,7 @@ interface ImapConfig {
     tls: any;
 }
 
-    export const fetchMails = async (fqe: string, password: string): Promise<Mail[]> => {
+    export const fetchMails = async (fqe: string, password: string) => {
 
     const imapConfig: ImapConfig = {
         user: 'dw.solun@cyberlinx.de',
@@ -37,7 +37,7 @@ interface ImapConfig {
         imap: imapConfig
     };
 
-    return imaps.connect(config).then((connection) => {
+    imaps.connect(config).then((connection) => {
         return connection.openBox('INBOX').then(() => {
             let mails: Mail[] = [];
             const searchCriteria = ['ALL'];
@@ -46,19 +46,18 @@ interface ImapConfig {
                 struct: true
             };
 
-            return connection.search(searchCriteria, fetchOptions).then((messages) => {
-                messages.forEach((item) => {
-                    if (item.attributes.struct) {
-                        const all = imaps.getParts(item.attributes.struct).find(part => part.which === '');
-                        const id = item.attributes.uid;
-                        const subject = item.parts.filter(part => part.which === 'HEADER')[0].body.subject[0];
-                        const date = item.parts.filter(part => part.which === 'HEADER')[0].body.date[0];
-                        const from = item.parts.filter(part => part.which === 'HEADER')[0].body.from[0];
-                        const to = item.parts.filter(part => part.which === 'HEADER')[0].body.to[0];
-                        mails.push({ subject, date, body: all.body, senderName: from, senderEmail: from, recipient: to });
-                    }
+            return imaps.connect(config).then((connection) => {
+                return connection.openBox('INBOX').then(() => {
+                    const searchCriteria = ['ALL'];
+                    const fetchOptions = {
+                        bodies: ['HEADER', 'TEXT', ''],
+                        struct: true
+                    };
+        
+                    return connection.search(searchCriteria, fetchOptions).then((messages) => {
+                        console.log("Received messages: ", messages);
+                    });
                 });
-                return mails;
             });
         });
     });
