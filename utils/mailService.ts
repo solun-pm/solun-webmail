@@ -8,9 +8,17 @@ interface Mail {
     body: string;
 }
 
+interface ImapConfig {
+    user: string;
+    password: string;
+    host: string;
+    port: number;
+    tls: boolean;
+}
+
 export const fetchMails = async (fqe: string, password: string): Promise<Mail[]> => {
 
-    const imapConfig = {
+    const imapConfig: ImapConfig = {
         user: 'dw.solun@cyberlinx.de',
         password: 'beno21',
         host: 'mail.cyberlinx.de',
@@ -52,10 +60,13 @@ export const fetchMails = async (fqe: string, password: string): Promise<Mail[]>
                     struct: true,
                 });
 
+                console.log('fetch')
+
                 fetch.on("message", (msg) => {
                     msg.on("body", (stream) => {
                         simpleParser(stream, (err, mail) => {
                             if (err) return;
+                            console.log('mail')
                             processMail(mail);
                         });
                     });
