@@ -1,11 +1,13 @@
-import Imap from "imap";
-import { simpleParser } from "mailparser";
+import * as imaps from 'imap-simple';
 import nodemailer from 'nodemailer';
 
 interface Mail {
     subject: string;
     date: Date;
     body: string;
+    senderName: string;
+    senderEmail: string;
+    recipient: string;
 }
 
 interface ImapConfig {
@@ -13,10 +15,10 @@ interface ImapConfig {
     password: string;
     host: string;
     port: number;
-    tls: boolean;
+    tls: any;
 }
 
-export const fetchMails = async (fqe: string, password: string): Promise<Mail[]> => {
+    export const fetchMails = async (fqe: string, password: string): Promise<Mail[]> => {
 
     const imapConfig: ImapConfig = {
         user: 'dw.solun@cyberlinx.de',
@@ -31,66 +33,34 @@ export const fetchMails = async (fqe: string, password: string): Promise<Mail[]>
         tls: true,*/
     };
 
-    return new Promise((resolve, reject) => {
-        const imap = new Imap(imapConfig as any);
-        let mails: Mail[] = [];
+    const config = {
+        imap: imapConfig
+    };
 
-        const processMail = (mail: any) => {
-            const { subject, date, textAsHtml, from, to } = mail;
-            const senderName = from.text || '';
-            const senderEmail = from.value[0].address || '';
-            const recipientEmails = to.value.map((recipient: any) => recipient.address).join(', ');
-            //@ts-ignore works fine for now
-            mails.push({ subject, date, body: textAsHtml, senderName, senderEmail, recipient: recipientEmails });
-        };
+    return imaps.connect(config).then((connection) => {
+        return connection.openBox('INBOX').then(() => {
+            let mails: Mail[] = [];
+            const searchCriteria = ['ALL'];
+            const fetchOptions = {
+                bodies: ['HEADER', 'TEXT', ''],
+                struct: true
+            };
 
-        imap.once("ready", () => {
-            console.log('ready')
-            imap.openBox("INBOX", false, (err, box) => {
-                if (err) reject(err);
-
-                if (box.messages.total === 0) {
-                    console.log('no messages')
-                    resolve([]);
-                    return;
-                }
-
-                const fetch = imap.seq.fetch("1:*", {
-                    bodies: "",
-                    struct: true,
+            return connection.search(searchCriteria, fetchOptions).then((messages) => {
+                messages.forEach((item) => {
+                    if (item.attributes.struct) {
+                        const all = imaps.getParts(item.attributes.struct).find(part => part.which === '');
+                        const id = item.attributes.uid;
+                        const subject = item.parts.filter(part => part.which === 'HEADER')[0].body.subject[0];
+                        const date = item.parts.filter(part => part.which === 'HEADER')[0].body.date[0];
+                        const from = item.parts.filter(part => part.which === 'HEADER')[0].body.from[0];
+                        const to = item.parts.filter(part => part.which === 'HEADER')[0].body.to[0];
+                        mails.push({ subject, date, body: all.body, senderName: from, senderEmail: from, recipient: to });
+                    }
                 });
-
-                console.log('fetch')
-
-                fetch.on("message", (msg) => {
-                    msg.on("body", (stream) => {
-                        simpleParser(stream, (err, mail) => {
-                            if (err) return;
-                            console.log('mail')
-                            processMail(mail);
-                        });
-                    });
-                });
-
-                fetch.once("error", (err) => {
-                    reject(err);
-                });
-
-                fetch.once("end", () => {
-                    imap.end();
-                });
+                return mails;
             });
         });
-
-        imap.once("error", (err: any) => {
-            reject(err);
-        });
-
-        imap.once("end", () => {
-            resolve(mails);
-        });
-
-        imap.connect();
     });
 };
 
