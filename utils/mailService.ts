@@ -40,6 +40,11 @@ export const fetchMails = async (fqe: string, password: string): Promise<Mail[]>
             imap.openBox("INBOX", false, (err, box) => {
                 if (err) reject(err);
 
+                if (box.messages.total === 0) {
+                    resolve([]);
+                    return;
+                }
+
                 const fetch = imap.seq.fetch("1:*", {
                     bodies: "",
                     struct: true,
