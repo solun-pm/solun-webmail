@@ -55,7 +55,10 @@ interface ImapConfig {
                     };
         
                     return connection.search(searchCriteria, fetchOptions).then((messages) => {
-                        console.log("Received messages: ", messages);
+                        messages.forEach((message) => {
+                            const bodyPart = message.parts.find(part => part.which === 'TEXT');
+                            console.log("Mail body: ", bodyPart ? bodyPart.body : 'No body found');
+                        });
                     });
                 });
             });
