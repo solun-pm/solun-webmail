@@ -37,10 +37,12 @@ export const fetchMails = async (fqe: string, password: string): Promise<Mail[]>
         };
 
         imap.once("ready", () => {
+            console.log('ready')
             imap.openBox("INBOX", false, (err, box) => {
                 if (err) reject(err);
 
                 if (box.messages.total === 0) {
+                    console.log('no messages')
                     resolve([]);
                     return;
                 }

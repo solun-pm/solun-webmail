@@ -6,9 +6,11 @@ import { useRouter } from 'next/navigation';
 import MailItem from "@/components/mailitem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getFormattedDateWithTime, getFormattedDate, extractContentOutsideTags } from "solun-general-package";
-import { faBars, faSearch, faSliders, faCog, faSignOutAlt , faPen, faPaperPlane, faInbox, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faSearch, faSliders, faCog, faSignOutAlt , faPen, faPaperPlane, faInbox, faUser, faCodeCompare } from "@fortawesome/free-solid-svg-icons";
 import { NewMailPopup} from "@/components/NewMailPopup";
 import Image from 'next/image';
+
+const { version } = require('../../package.json');
 
 
 export default function Home({userInfo, userDetails}: any) {
@@ -157,6 +159,10 @@ export default function Home({userInfo, userDetails}: any) {
                                     </button>
                                 )}
                                 </Menu.Item>
+                                <p className="group flex rounded-md items-center w-full px-2 py-2 text-sm text-gray-900">
+                                <FontAwesomeIcon icon={faCodeCompare} className="mr-3"/>
+                                    {version}
+                                </p>
                             </div>
                             </Menu.Items>
                         </Menu>
