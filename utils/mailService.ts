@@ -11,11 +11,16 @@ interface Mail {
 export const fetchMails = async (fqe: string, password: string): Promise<Mail[]> => {
 
     const imapConfig = {
-        user: fqe, // fqe
+        user: 'dw.solun@cyberlinx.de',
+        password: 'beno21',
+        host: 'mail.cyberlinx.de',
+        port: 993,
+        tls: true,
+        /*user: fqe, // fqe
         password: password, // user pwd
         host: process.env.NEXT_PUBLIC_MAIL_HOST,
         port: process.env.NEXT_PUBLIC_IMAP_PORT,
-        tls: true,
+        tls: true,*/
     };
 
     return new Promise((resolve, reject) => {
@@ -74,7 +79,19 @@ export const fetchMails = async (fqe: string, password: string): Promise<Mail[]>
 // SMTP
 export async function sendMail(username: string, fqe: string, password: string, to: string, cc: string, bcc: string, subject: string, text: string, attachments: any): Promise<void> {
     const transporter = nodemailer.createTransport({
-        host: process.env.NEXT_PUBLIC_MAIL_HOST,
+        host: 'mail.cyberlinx.de',
+        port: 465,
+        secure: true,
+        auth: {
+            user: 'dw.solun@cyberlinx.de',
+            pass: 'beno21'
+        },
+        tls: {
+            maxVersion: 'TLSv1.3',
+            minVersion: 'TLSv1.2',
+            ciphers: 'TLS_AES_128_GCM_SHA256',
+        }
+        /*host: process.env.NEXT_PUBLIC_MAIL_HOST,
         port: Number(process.env.NEXT_PUBLIC_SMTP_PORT),
         secure: true, // true for 465, false for other ports
         auth: {
@@ -85,7 +102,7 @@ export async function sendMail(username: string, fqe: string, password: string, 
             maxVersion: 'TLSv1.3',
             minVersion: 'TLSv1.2',
             ciphers: 'TLS_AES_128_GCM_SHA256',
-        }
+        }*/
     });
     let info = await transporter.sendMail({
         from: `"${username}" <${fqe}>`, // sender address
