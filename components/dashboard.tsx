@@ -10,7 +10,7 @@ import { faBars, faSearch, faSliders, faCog, faSignOutAlt , faPen, faPaperPlane,
 import { NewMailPopup} from "@/components/NewMailPopup";
 import Image from 'next/image';
 
-const { version } = require('../../package.json');
+const { version } = require('../package.json');
 
 
 export default function Home({userInfo, userDetails}: any) {
