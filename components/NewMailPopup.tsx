@@ -4,9 +4,11 @@ import { faTimes, faArrowUp, faPaperclip } from "@fortawesome/free-solid-svg-ico
 
 interface NewMailPopupProps {
     onClose: () => void;
+    userInfo: any;
+    userDetails: any;
 }
 
-export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
+export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, userDetails }) => {
     // Form elements
     const [to, setTo] = useState<Email[]>([]);
     const [copy, setCopy] = useState<string>('');
@@ -52,6 +54,9 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    username: userDetails.username,
+                    fqe: userInfo.fqe,
+                    password: userInfo.password,
                     to,
                     copy,
                     blindcopy,
@@ -217,7 +222,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
                                 CC/BCC,
                             </span>
                                                         <span className="text-gray-400">
-                                From: Your Name your@mailaddress
+                                From: {userDetails.username} {userDetails.fqe}
                             </span>
                             </button>
                         </div>
@@ -246,7 +251,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose }) => {
                                     <input
                                         className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
                                         type="text"
-                                        placeholder="From: Your Name your@mailaddress"
+                                        placeholder={'From: ' + userDetails.username + ' ' + userDetails.fqe}
                                         readOnly
                                     />
                                 </div>

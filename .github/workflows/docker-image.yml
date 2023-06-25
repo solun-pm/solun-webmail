@@ -52,3 +52,57 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          
+      - name: Restart Node 1
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_DOMAIN }}/hooks/restart-app-1
+          
+      - name: Wait for server 1 to restart
+        run: |
+          sleep 60s
+
+      - name: Restart Node 2
+        run: |
+          curl -X POST ${{ secrets.WEBHOOK_DOMAIN }}/hooks/restart-app-2
+          
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.4.1
+
+      - name: Discord Webhook for Main
+        if: github.ref == 'refs/heads/main'
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          COMMIT_LINK="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} \
+          -H "Content-Type: application/json" \
+          -d '{
+            "embeds": [{
+              "title": "New Production Version deployed on mail.solun.pm",
+              "url": "https://mail.solun.pm",
+              "description": "[Changes]('$COMMIT_LINK')",
+              "fields": [
+                { "name": "Version", "value": "'$PACKAGE_VERSION'", "inline": false }
+              ],
+              "color": 255
+            }]
+          }'
+
+      - name: Discord Webhook for Dev
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          COMMIT_LINK="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -X POST ${{ secrets.DISCORD_WEBHOOK }} \
+          -H "Content-Type: application/json" \
+          -d '{
+            "embeds": [{
+              "title": "New Development Version deployed on dev-mail.solun.pm",
+              "url": "https://dev-mail.solun.pm",
+              "description": "[Changes]('$COMMIT_LINK')",
+              "fields": [
+                { "name": "Version", "value": "'$PACKAGE_VERSION'", "inline": false }
+              ],
+              "color": 16753920
+            }]
+          }'

@@ -5,6 +5,7 @@ export async function POST(req: Request) {
     const res = await req.json();
     try {
         const mails = await fetchMails(res.fqe, res.password);
+        console.log(mails)
         return NextResponse.json({ mails }, { status: 200});
     } catch (e) {
         console.log(e);
