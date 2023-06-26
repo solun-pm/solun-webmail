@@ -130,11 +130,11 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
 
     return (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-800 bg-opacity-50">
-            <div className="bg-slate-800 p-8 rounded-lg w-10/12 lg:w-1/2 flex flex-col">
+            <div className="bg-slate-900 p-8 rounded-lg w-10/12 lg:w-1/2 flex flex-col">
                 <div className="flex justify-between items-start">
                     <div className="flex flex-col">
                         <button
-                            className="w-8 h-8 bg-slate-900 text-white font-semibold rounded-full hover:bg-gray-950 flex items-center justify-center mb-2"
+                            className="w-8 h-8 bg-slate-900 text-white font-semibold transition-all rounded-full hover:bg-red-600 flex items-center justify-center mb-2"
                             onClick={onClose}
                         >
                             <FontAwesomeIcon icon={faTimes} size="lg" />
@@ -144,13 +144,13 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                         </h2>
                     </div>
                     <div className="flex items-center">
-                        <label className="w-6 h-6 text-blue-700 hover:text-blue-900 flex items-center justify-center mr-4 cursor-pointer">
+                        <label className="w-6 h-6 text-blue-500 hover:text-blue-600 transition-all flex items-center justify-center mr-4 cursor-pointer">
                             <input type="file" style={{display: 'none'}} />
                             <FontAwesomeIcon icon={faPaperclip} size="lg" />
                         </label>
                         <button
                             type="submit"
-                            className="w-12 h-12 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-700 flex items-center justify-center"
+                            className="w-12 h-12 bg-blue-500 text-white font-semibold transition-all rounded-full hover:bg-blue-600 flex items-center justify-center"
                             onClick={handleSubmit}
                         >
                             <FontAwesomeIcon icon={faArrowUp} size="2x" />
@@ -160,7 +160,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
 
 
                 <form className="mt-4 flex-grow" onSubmit={handleSubmit}>
-                    <div className="flex flex-wrap border-t border-blue-500 bg-slate-800">
+                    <div className="flex flex-wrap border-slate-500 bg-slate-900">
                         {to.map((emailObj, index) => (
                             // eslint-disable-next-line react/jsx-key
                             <div
@@ -181,7 +181,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                                             }
                                         }}
                                         className={`${emailObj.valid ? 'bg-blue-500 text-white focus:outline-none appearance-none' : 'bg-red-500 text-black focus:outline-none appearance-none'}`}
-                                        style={{ width: `${currentEmail.length}ch` }} // This will make the input field width grow with the content
+                                        style={{ width: `${currentEmail.length}ch` }}
                                         autoFocus
                                     />
                                 ) : (
@@ -190,16 +190,21 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                             </div>
                         ))}
                         <input
-                            className="flex-grow p-2 text-white placeholder-gray-400 border-none outline-none"
+                            className="flex-grow p-2 text-white bg-slate-800 rounded-t-2xl placeholder-gray-400 border-none outline-none"
                             type="email"
                             placeholder="To:"
                             value={editMode !== null ? '' : currentEmail}
                             onChange={(e) => setCurrentEmail(e.target.value)}
+                            onBlur={(e) => {
+                                if (currentEmail !== '') {
+                                    handleAddEmail(currentEmail);
+                                }
+                            }}
                             onKeyDown={(e) => {
                                 if (e.key === 'Backspace' && currentEmail === '') {
                                     e.preventDefault();
                                     handleDeleteLastEmail();
-                                } else if (e.key === 'Enter') {
+                                } else if (e.key === 'Enter' || e.key === 'Tab') {
                                     e.preventDefault();
                                     if (currentEmail !== '') {
                                         handleAddEmail(currentEmail);
@@ -209,9 +214,9 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                         />
                     </div>
                     {!isExpanded ? (
-                        <div className="border-t border-blue-500 bg-slate-800">
+                        <div className="border-t border-slate-500 bg-slate-800">
                             <button
-                                className="w-full p-2border-none outline-none text-left flex justify-start items-center"
+                                className="w-full p-2 border-none outline-none text-left flex justify-start items-center"
                                 onClick={handleExpandClick}
                             >
                             <span
@@ -229,27 +234,27 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                     ) : (
                         <>
                             <div ref={expandedFieldsRef}>
-                                <div className="border-t border-blue-500 bg-slate-800">
+                                <div className="border-t border-slate-500">
                                     <input
-                                        className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
+                                        className="w-full p-2 text-white bg-slate-800 placeholder-gray-400 border-none outline-none"
                                         type="text"
                                         placeholder="Copy:"
                                         value={copy}
                                         onChange={(e) => setCopy(e.target.value)}
                                     />
                                 </div>
-                                <div className="border-t border-blue-500">
+                                <div className="border-t border-slate-500">
                                     <input
-                                        className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
+                                        className="w-full p-2 text-white bg-slate-800 placeholder-gray-400 border-none outline-none"
                                         type="text"
                                         placeholder="Blindcopy:"
                                         value={blindcopy}
                                         onChange={(e) => setBlindcopy(e.target.value)}
                                     />
                                 </div>
-                                <div className="border-t border-blue-500">
+                                <div className="border-t border-slate-500">
                                     <input
-                                        className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
+                                        className="w-full p-2 text-white bg-slate-800 placeholder-gray-400 border-none outline-none"
                                         type="text"
                                         placeholder={'From: ' + userDetails.username + ' ' + userDetails.fqe}
                                         readOnly
@@ -258,18 +263,18 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                             </div>
                         </>
                     )}
-                    <div className="border-t border-blue-500 bg-slate-800">
+                    <div className="border-t border-slate-500">
                         <input
-                            className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
+                            className="w-full p-2 text-white bg-slate-800 placeholder-gray-400 border-none outline-none"
                             type="text"
                             placeholder="Subject:"
                             value={subject}
                             onChange={(e) => setSubject(e.target.value)}
                         />
                     </div>
-                    <div className="border-t border-blue-500 bg-slate-800">
+                    <div className="border-t border-slate-500">
                         <textarea
-                            className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
+                            className="w-full p-2 text-white bg-slate-800 rounded-b-3xl placeholder-gray-400 border-none outline-none"
                             placeholder="Message:"
                             rows={8}
                             value={message}

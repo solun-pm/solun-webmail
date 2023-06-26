@@ -19,13 +19,26 @@ export default function Home({userInfo, userDetails}: any) {
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [newMailPopupVisible, setNewMailPopupVisible] = useState(false);
 
+    const [activeView, setActiveView] = useState('inbox'); // 'inbox', 'email', 'sidebar'
+
+    const changeActiveView = (view: any) => {
+        if (window.innerWidth < 640) {  // you can change the number 640 to any other number depending on your breakpoint for mobile devices
+            setActiveView(view);
+        }
+    };
+
     const handleLogout = () => {
         localStorage.removeItem("jwt");
         router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/login/mail');
       };
 
     const toggleSidebar = () => {
-        setSidebarVisible(!sidebarVisible);
+        if (window.innerWidth < 640) {
+            setSidebarVisible(!sidebarVisible);
+            setActiveView(sidebarVisible ? 'inbox' : 'sidebar');
+        } else {
+            setSidebarVisible(!sidebarVisible);
+        }
     };
 
     const openNewMailPopup = () => {
@@ -68,6 +81,7 @@ export default function Home({userInfo, userDetails}: any) {
 
     const handleMailItemClick = (mail : any) => {
         setSelectedMail(mail);
+        changeActiveView('email');
     };
 
 
@@ -98,24 +112,24 @@ export default function Home({userInfo, userDetails}: any) {
         return (
         <div className="flex flex-col min-h-screen">
             <div className="w-full">
-                <header className="bg-gray-950 py-4 px-8 flex justify-between">
+                <header className="bg-slate-950 py-4 px-8 flex justify-between">
                     <div className="flex items-center space-x-4">
                         <button onClick={toggleSidebar} className="text-white">
                             <FontAwesomeIcon icon={faBars} />
                         </button>
-                        <Image src="/logo.svg" alt="Logo" className="hidden lg:block h-8 w-8" />
+                        <img src="/logo.svg" alt="Logo" className="hidden lg:block h-8 w-8" />
                         <h1 className="hidden lg:block text-white text-xl font-semibold">Solun</h1>
                     </div>
-                    <div className="w-full lg:w-3/5 flex items-center justify-between bg-gray-950">
-                        <div className="w-full lg:w-3/5 mx-4 bg-gray-950 text-white relative">
-                            <FontAwesomeIcon icon={faSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <div className="w-full lg:w-3/5 flex items-center justify-between bg-slate-950">
+                        <div className="w-full lg:w-3/5 mx-4 bg-slate-950 text-white relative">
+                            <FontAwesomeIcon icon={faSearch} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
                             <input
                                 type="text"
                                 placeholder="Search"
-                                className="w-full border bg-gray-950 text-white border-slate-500 pl-10 pr-12 py-2 rounded appearance-none focus:outline-none"
+                                className="w-full border bg-slate-950 text-white border-slate-500 pl-10 pr-12 py-2 rounded appearance-none focus:outline-none"
                                 style={{ height: '40px'}}
                             />
-                            <button className="p-2 rounded-full transition-200 duration-200 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <button className="p-2 rounded-full transition-200 duration-200 absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400">
                                 <FontAwesomeIcon icon={faSliders} />
                             </button>
                         </div>
@@ -130,7 +144,7 @@ export default function Home({userInfo, userDetails}: any) {
                             </div>
                             <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <div className="py-1">
-                                <p className="group flex rounded-md items-center w-full px-2 py-2 text-sm text-gray-900">
+                                <p className="group flex rounded-md items-center w-full px-2 py-2 text-sm text-slate-900">
                                 <FontAwesomeIcon icon={faUser} className="mr-3"/>
                                     {userInfo.fqe}
                                 </p>
@@ -138,7 +152,7 @@ export default function Home({userInfo, userDetails}: any) {
                                 {({ active }) => (
                                     <button
                                     className={`${
-                                        active ? "bg-blue-500 text-white" : "text-gray-900"
+                                        active ? "bg-blue-500 text-white" : "text-slate-900"
                                     } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                                     onClick={() => router.push(process.env.NEXT_PUBLIC_AUTH_DOMAIN + '/dashboard/settings')}
                                     >
@@ -151,7 +165,7 @@ export default function Home({userInfo, userDetails}: any) {
                                 {({ active }) => (
                                     <button
                                     className={`${
-                                        active ? "bg-blue-500 text-white" : "text-gray-900"
+                                        active ? "bg-blue-500 text-white" : "text-slate-900"
                                     } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
                                     onClick={handleLogout}
                                     >
@@ -160,7 +174,7 @@ export default function Home({userInfo, userDetails}: any) {
                                     </button>
                                 )}
                                 </Menu.Item>
-                                <p className="group flex rounded-md items-center w-full px-2 py-2 text-sm text-gray-900">
+                                <p className="group flex rounded-md items-center w-full px-2 py-2 text-sm text-slate-900">
                                 <FontAwesomeIcon icon={faCodeCompare} className="mr-3"/>
                                     {version}
                                 </p>
@@ -172,7 +186,7 @@ export default function Home({userInfo, userDetails}: any) {
             </div>
             <div className="flex">
                 <div className="flex-initial">
-                    <aside className={`w-full lg:w-64 bg-gray-950 p-4 h-screen ${sidebarVisible ? 'block' : 'hidden'}`}>
+                    <aside className={`lg:w-64 bg-slate-900 p-4 h-screen w-screen ${sidebarVisible ? 'block' : 'hidden'}`}>
                         <div className="overflow-y-auto h-full">
                             <button
                                 className="w-2/3 text-white p-2 rounded-lg bg-blue-500 transition-200 duration-200 text-left"
@@ -180,13 +194,13 @@ export default function Home({userInfo, userDetails}: any) {
                                 onClick={openNewMailPopup}
                             >
                                 <FontAwesomeIcon icon={faPen} />
-                                <span style={{ marginLeft: '15px' }}>Write</span>
+                                <span className='ml-2'>New</span>
                             </button>
-                            <button className="w-full text-white p-2 rounded-r-full bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
+                            <button className="w-full text-white p-2 rounded-r-full bg-slate-900 hover:bg-slate-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
                                 <FontAwesomeIcon icon={faInbox} />
                                 <span style={{ marginLeft: '15px' }}>Inbox</span>
                             </button>
-                            <button className="w-full text-white p-2 rounded-r-full bg-gray-950 hover:bg-gray-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
+                            <button className="w-full text-white p-2 rounded-r-full bg-slate-900 hover:bg-slate-600 transition-200 duration-200 text-left" style={{ paddingLeft: '15px' }}>
                                 <FontAwesomeIcon icon={faPaperPlane} />
                                 <span style={{ marginLeft: '15px' }}>Send</span>
                             </button>
@@ -194,7 +208,7 @@ export default function Home({userInfo, userDetails}: any) {
                     </aside>
                 </div>
                 <div className="flex-initial h-screen">
-                    <aside className={`w-full h-full max-h-screen lg:w-80 bg-gray-900 min-h-screen p-4 text-white`}>
+                    <aside className={`w-screen h-full max-h-screen lg:w-80 bg-slate-800 min-h-screen p-4 text-white`}>
                             <div className="overflow-y-auto h-full">
                                 {mails.map((mail, index) => (
                                     <MailItem
@@ -213,7 +227,7 @@ export default function Home({userInfo, userDetails}: any) {
                     {selectedMail && (
                         <div>
                             <div className="w-full mb-4">
-                                <div className="border-b-2 border-gray-800 p-4">
+                                <div className="border-b-2 border-slate-800 p-4">
                                     <div className="flex justify-between items-start">
                                         <div className="relative flex flex-col">
                                             <p
@@ -225,13 +239,13 @@ export default function Home({userInfo, userDetails}: any) {
                                                 {extractContentOutsideTags(selectedMail.senderName)}
                                             </p>
                                             {showEmail && (
-                                                <div className="absolute bg-gray-800 border p-2 mt-1 text-xs">
+                                                <div className="absolute bg-slate-800 border p-2 mt-1 text-xs">
                                                     {/*@ts-ignore Works fine (for now)*/}
                                                     {selectedMail.senderEmail}
                                                 </div>
                                             )}
                                             {/*@ts-ignore Works fine (for now)*/}
-                                            <p className="text-sm mt-2">To: {selectedMail.recipient}</p>
+                                            <p className="text-sm mt-2">To: {selectedMail.senderEmail}</p>
                                         </div>
 
                                         <div className="flex flex-col items-end">
