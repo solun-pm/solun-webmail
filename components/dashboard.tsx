@@ -9,6 +9,7 @@ import { getFormattedDateWithTime, getFormattedDate, extractContentOutsideTags }
 import { faBars, faSearch, faSliders, faCog, faSignOutAlt , faPen, faPaperPlane, faInbox, faUser, faCodeCompare } from "@fortawesome/free-solid-svg-icons";
 import { NewMailPopup} from "@/components/NewMailPopup";
 import Image from 'next/image';
+import { formatEmailContent } from '@/utils/formatMail';
 
 const { version } = require('../package.json');
 
@@ -248,7 +249,7 @@ export default function Home({userInfo, userDetails}: any) {
                                 className="mt-4"
                                 dangerouslySetInnerHTML={{
                                     // @ts-ignore Works fine (for now)
-                                    __html: selectedMail.body,
+                                    __html: formatEmailContent(selectedMail.body),
                                 }}
                             />
                         </div>

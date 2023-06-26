@@ -160,7 +160,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
 
 
                 <form className="mt-4 flex-grow" onSubmit={handleSubmit}>
-                    <div className="flex flex-wrap border-t border-blue-500 bg-gray-950">
+                    <div className="flex flex-wrap border-t border-blue-500">
                         {to.map((emailObj, index) => (
                             // eslint-disable-next-line react/jsx-key
                             <div
@@ -190,7 +190,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                             </div>
                         ))}
                         <input
-                            className="flex-grow p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                            className="flex-grow p-2 text-white placeholder-gray-400 border-none outline-none"
                             type="email"
                             placeholder="To:"
                             value={editMode !== null ? '' : currentEmail}
@@ -211,7 +211,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                     {!isExpanded ? (
                         <div className="border-t border-blue-500">
                             <button
-                                className="w-full p-2 bg-gray-950 border-none outline-none text-left flex justify-start items-center"
+                                className="w-full p-2border-none outline-none text-left flex justify-start items-center"
                                 onClick={handleExpandClick}
                             >
                             <span
@@ -231,7 +231,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                             <div ref={expandedFieldsRef}>
                                 <div className="border-t border-blue-500">
                                     <input
-                                        className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                                        className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
                                         type="text"
                                         placeholder="Copy:"
                                         value={copy}
@@ -240,7 +240,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                                 </div>
                                 <div className="border-t border-blue-500">
                                     <input
-                                        className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                                        className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
                                         type="text"
                                         placeholder="Blindcopy:"
                                         value={blindcopy}
@@ -249,7 +249,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                                 </div>
                                 <div className="border-t border-blue-500">
                                     <input
-                                        className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                                        className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
                                         type="text"
                                         placeholder={'From: ' + userDetails.username + ' ' + userDetails.fqe}
                                         readOnly
@@ -260,7 +260,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                     )}
                     <div className="border-t border-blue-500">
                         <input
-                            className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                            className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
                             type="text"
                             placeholder="Subject:"
                             value={subject}
@@ -269,7 +269,7 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
                     </div>
                     <div className="border-t border-blue-500">
                         <textarea
-                            className="w-full p-2 text-white bg-gray-950 placeholder-gray-400 border-none outline-none"
+                            className="w-full p-2 text-white placeholder-gray-400 border-none outline-none"
                             placeholder="Message:"
                             rows={8}
                             value={message}
