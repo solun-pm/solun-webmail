@@ -129,12 +129,12 @@ export const NewMailPopup: React.FC<NewMailPopupProps> = ({ onClose, userInfo, u
 
 
     return (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-gray-950 p-8 rounded-lg w-10/12 lg:w-1/2 flex flex-col">
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-slate-800 bg-opacity-50">
+            <div className="bg-slate-800 p-8 rounded-lg w-10/12 lg:w-1/2 flex flex-col">
                 <div className="flex justify-between items-start">
                     <div className="flex flex-col">
                         <button
-                            className="w-8 h-8 bg-gray-800 text-white font-semibold rounded-full hover:bg-gray-950 flex items-center justify-center mb-2"
+                            className="w-8 h-8 bg-slate-900 text-white font-semibold rounded-full hover:bg-gray-950 flex items-center justify-center mb-2"
                             onClick={onClose}
                         >
                             <FontAwesomeIcon icon={faTimes} size="lg" />
