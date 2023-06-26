@@ -6,13 +6,26 @@ export function formatEmailContent(emailContent: any) {
 
     function formatReplies(text: any) {
         const lines = text.split('\n');
-        return lines.map((line: any) => {
+        let replies = [];
+        let currentReply = [] as any;
+
+        lines.forEach((line: any) => {
             if (line.startsWith('>')) {
-                return `<span style="color: blue">${line}</span>`;
+                currentReply.push(`<span style="color: #888888">${line.substring(1)}</span>`);
             } else {
-                return line;
+                if (currentReply.length > 0) {
+                    replies.push(currentReply.join('<br/>'));
+                    currentReply = [];
+                }
+                replies.push(line);
             }
-        }).join('\n');
+        });
+
+        if (currentReply.length > 0) {
+            replies.push(currentReply.join('<br/>'));
+        }
+
+        return replies.join('<br/><br/>');
     }
 
     let formattedContent = emailContent;
