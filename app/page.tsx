@@ -9,7 +9,7 @@ export default function Home() {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState(null) as any;
   const [userDetails, setUserDetails] = useState(null) as any;
-  const devMode = true;
+  const devMode = false;
 
   useEffect(() => {
       const fetchUserInfo = async () => {
